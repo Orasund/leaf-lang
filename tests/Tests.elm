@@ -1,6 +1,7 @@
 module Tests exposing (..)
 
 import Ast exposing (Exp(..), Number(..))
+import Dict
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Semantics
@@ -43,6 +44,19 @@ exp =
             \_ ->
                 "a"
                     |> expectError
+        , Test.test "Types" <|
+            \_ ->
+                "[-1,42.,{a:42}]"
+                    |> expectSuccess
+                        (ListVal
+                            [ NumberVal (IntNum -1)
+                            , NumberVal (FloatNum 42.0)
+                            , ObjectVal
+                                (Dict.fromList
+                                    [ ( "a", NumberVal (IntNum 42) ) ]
+                                )
+                            ]
+                        )
         , Test.test "Basic Function" <|
             \_ ->
                 "(() -> 42) null"

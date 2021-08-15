@@ -33,7 +33,7 @@ main =
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { result = Err ""
-      , text = "(a) -> 42"
+      , text = "[-1,42.0,{a:42}]"
       }
     , Cmd.none
     )

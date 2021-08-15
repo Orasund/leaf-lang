@@ -29,16 +29,22 @@ parseBool =
 parseNumber : Parser Number
 parseNumber =
     Parser.oneOf
-        [ Parser.succeed (negate >> IntNum)
+        [ Parser.succeed identity
             |. Parser.symbol "-"
-            |= Parser.int
-        , Parser.succeed IntNum
-            |= Parser.int
-        , Parser.succeed (negate >> FloatNum)
-            |. Parser.symbol "-"
-            |= Parser.float
-        , Parser.succeed FloatNum
-            |= Parser.float
+            |= Parser.number
+                { int = Just (negate >> IntNum)
+                , hex = Nothing
+                , octal = Nothing
+                , binary = Nothing
+                , float = Just (negate >> FloatNum)
+                }
+        , Parser.number
+            { int = Just IntNum
+            , hex = Nothing
+            , octal = Nothing
+            , binary = Nothing
+            , float = Just FloatNum
+            }
         ]
 
 
