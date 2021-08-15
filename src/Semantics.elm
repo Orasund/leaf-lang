@@ -1,8 +1,8 @@
 module Semantics exposing (eval)
 
-import Ast exposing (BuildIn(..), Closure, Exp(..), Number(..), Statement(..), Value(..))
+import Ast exposing (BuildIn(..), Closure, Exp(..), Number(..), Statement(..))
 import Dict exposing (Dict)
-import Util
+import Util exposing (Value(..))
 
 
 type Access
@@ -434,8 +434,45 @@ evalExp e context =
                 |> Maybe.map (.value >> Ok)
                 |> Maybe.withDefault (Err ("Can't find variable " ++ string))
 
-        Constant value ->
-            Ok value
+        NullExp ->
+            Ok NullVal
+
+        BoolExp bool ->
+            Ok (BoolVal bool)
+
+        NumberExp n ->
+            Ok (NumberVal n)
+
+        ListExp list ->
+            list
+                |> List.foldl
+                    (\a ->
+                        Result.andThen
+                            (\l ->
+                                context
+                                    |> evalExp a
+                                    |> Result.map (\b -> b :: l)
+                            )
+                    )
+                    (Ok [])
+                |> Result.map (List.reverse >> ListVal)
+
+        ObjectExp dict ->
+            dict
+                |> Dict.foldl
+                    (\k a ->
+                        Result.andThen
+                            (\l ->
+                                context
+                                    |> evalExp a
+                                    |> Result.map (\b -> l |> Dict.insert k b)
+                            )
+                    )
+                    (Ok Dict.empty)
+                |> Result.map ObjectVal
+
+        FunctionExp maybeString exp ->
+            Ok (FunctionVal maybeString exp)
 
         ClosureExp closure ->
             context

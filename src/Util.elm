@@ -1,8 +1,17 @@
-module Util exposing (deadEndsToString, numToFloat, valueToString)
+module Util exposing (Value(..), deadEndsToString, numToFloat, valueToString)
 
-import Ast exposing (Number(..), Value(..))
-import Dict
+import Ast exposing (Exp, Number(..))
+import Dict exposing (Dict)
 import Parser exposing (DeadEnd, Problem(..))
+
+
+type Value
+    = NullVal
+    | BoolVal Bool
+    | NumberVal Number
+    | ListVal (List Value)
+    | ObjectVal (Dict String Value)
+    | FunctionVal (Maybe String) Exp
 
 
 numToFloat : Number -> Float

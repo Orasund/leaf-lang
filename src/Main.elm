@@ -1,14 +1,12 @@
 module Main exposing (..)
 
-import Ast exposing (Value(..))
 import Browser
-import Element exposing (Element)
+import Element
 import Element.Input as Input
 import Html exposing (Html)
-import Parser
 import Semantics
 import Syntax
-import Util
+import Util exposing (Value(..))
 
 
 type alias Model =
@@ -35,7 +33,7 @@ main =
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { result = Err ""
-      , text = "() -> 42"
+      , text = "(a) -> 42"
       }
     , Cmd.none
     )

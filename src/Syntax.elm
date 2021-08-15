@@ -1,6 +1,6 @@
 module Syntax exposing (parse)
 
-import Ast exposing (BuildIn, Closure, Exp(..), Number(..), Statement(..), Value(..))
+import Ast exposing (BuildIn, Closure, Exp(..), Number(..), Statement(..))
 import Dict exposing (Dict)
 import Parser exposing ((|.), (|=), Parser, Step(..), Trailing(..))
 import Set
@@ -14,14 +14,6 @@ parseVariable =
         , inner = \c -> Char.isAlphaNum c || c == '_'
         , reserved = Set.fromList [ "let", "mut", "null", "true", "false" ]
         }
-
-
-parseNull : Parser ()
-parseNull =
-    Parser.oneOf
-        [ Parser.keyword "()"
-        , Parser.keyword "null"
-        ]
 
 
 parseBool : Parser Bool
@@ -50,7 +42,7 @@ parseNumber =
         ]
 
 
-parseList : Parser (List Value)
+parseList : Parser (List Exp)
 parseList =
     Parser.oneOf
         [ Parser.succeed (always [])
@@ -60,23 +52,23 @@ parseList =
             , separator = ","
             , end = "]"
             , spaces = Parser.spaces
-            , item = parseValue
+            , item = parseExp
             , trailing = Forbidden
             }
         ]
 
 
-parseObjectField : Parser ( String, Value )
+parseObjectField : Parser ( String, Exp )
 parseObjectField =
     Parser.succeed Tuple.pair
         |= parseVariable
         |. Parser.spaces
         |. Parser.symbol ":"
         |. Parser.spaces
-        |= parseValue
+        |= parseExp
 
 
-parseObject : Parser (Dict String Value)
+parseObject : Parser (Dict String Exp)
 parseObject =
     Parser.sequence
         { start = "{"
@@ -89,54 +81,117 @@ parseObject =
         |> Parser.map Dict.fromList
 
 
-parseFunctionAndNull : Parser Value
-parseFunctionAndNull =
-    (Parser.succeed identity
-        |= Parser.sequence
-            { start = "("
-            , separator = ","
-            , end = ")"
-            , spaces = Parser.spaces
-            , item = parseVariable
-            , trailing = Forbidden
-            }
-        |. Parser.spaces
-    )
-        |> Parser.andThen
-            (\list ->
-                case list |> List.reverse of
-                    [] ->
-                        Parser.oneOf
-                            [ Parser.succeed (FunctionVal Nothing)
-                                |. Parser.keyword "->"
-                                |. Parser.spaces
-                                |= parseExp
-                            , Parser.succeed NullVal
-                            ]
 
-                    head :: tail ->
-                        Parser.succeed
-                            (\exp ->
-                                tail
-                                    |> List.foldl (\a e -> FunctionVal (Just a) (Constant e))
-                                        (FunctionVal (Just head) exp)
-                            )
+{--|An Expression starting with "("
+
+* unit value: "()"
+* variable "(a)"
+* function: "(a,b,c) -> exp"
+
+--}
+
+
+roundBracketExp : Parser Exp
+roundBracketExp =
+    let
+        {--| build a function with multiple arguments --}
+        buildFunction : String -> List String -> Exp -> Exp
+        buildFunction last list exp =
+            case list |> List.reverse of
+                [] ->
+                    FunctionExp (Just last) exp
+
+                head :: tail ->
+                    tail
+                        |> List.foldl (\a -> FunctionExp (Just a))
+                            (FunctionExp (Just head) exp)
+                        |> FunctionExp (Just last)
+
+        {--| parses the function arguments "(b,c)"
+        --}
+        functionHelp : List String -> Parser (Step (List String) (List String))
+        functionHelp revList =
+            Parser.oneOf
+                [ Parser.succeed (\a -> Loop (a :: revList))
+                    |= parseVariable
+                    |. Parser.spaces
+                    |. Parser.symbol ","
+                    |. Parser.spaces
+                , Parser.succeed (\a -> Done (a :: revList |> List.reverse))
+                    |= parseVariable
+                    |. Parser.spaces
+                    |. Parser.symbol ")"
+                ]
+
+        {--| decides if "(a)" is part of a function "(a) -> exp" or a variable
+        --}
+        functionOrVariable : String -> Parser Exp
+        functionOrVariable a =
+            Parser.oneOf
+                [ --"(a)"
+                  Parser.succeed identity
+                    |. Parser.symbol ")"
+                    |. Parser.spaces
+                    |= Parser.oneOf
+                        [ --"(a) -> exp"
+                          Parser.succeed (FunctionExp (Just a))
                             |. Parser.keyword "->"
                             |. Parser.spaces
                             |= parseExp
-            )
-
-
-parseValue : Parser Value
-parseValue =
-    Parser.oneOf
-        [ parseFunctionAndNull
-        , Parser.keyword "null" |> Parser.map (always NullVal)
-        , parseBool |> Parser.map BoolVal
-        , parseNumber |> Parser.map NumberVal
-        , Parser.lazy (\_ -> parseList) |> Parser.map ListVal
-        , Parser.lazy (\_ -> parseObject) |> Parser.map ObjectVal
-        ]
+                        , --else
+                          Parser.succeed (Variable a)
+                        ]
+                , --"(a,b,c) -> exp"
+                  Parser.succeed (buildFunction a)
+                    |. Parser.symbol ","
+                    |. Parser.spaces
+                    |= Parser.loop [ a ] functionHelp
+                    |. Parser.spaces
+                    |. Parser.keyword "->"
+                    |. Parser.spaces
+                    |= parseExp
+                ]
+    in
+    Parser.succeed identity
+        |. Parser.symbol "("
+        |. Parser.spaces
+        |= Parser.oneOf
+            [ -- "()"
+              Parser.succeed identity
+                |. Parser.symbol ")"
+                |. Parser.spaces
+                |= Parser.oneOf
+                    [ --"() -> exp"
+                      Parser.succeed (FunctionExp Nothing)
+                        |. Parser.keyword "->"
+                        |. Parser.spaces
+                        |= parseExp
+                    , --else
+                      Parser.succeed NullExp
+                    ]
+            , --"(a"
+              (Parser.succeed identity
+                |= parseVariable
+                |. Parser.spaces
+              )
+                |> Parser.andThen functionOrVariable
+            , --"(exp)"
+              Parser.succeed identity
+                |= parseExp
+                |. Parser.spaces
+                |. Parser.symbol ")"
+                |> Parser.andThen
+                    (\exp1 ->
+                        Parser.oneOf
+                            [ --"(exp) exp"
+                              Parser.succeed (\exp2 -> Apply exp2 exp1)
+                                |. Parser.spaces
+                                |= parseExp
+                            , --else
+                              Parser.succeed exp1
+                            ]
+                    )
+            ]
 
 
 parseBuildIn : Parser BuildIn
@@ -148,19 +203,33 @@ parseExp : Parser Exp
 parseExp =
     Parser.oneOf
         [ parseBuildIn |> Parser.map BuildInFun
-        , Parser.succeed Apply
-            |= Parser.lazy (\_ -> parseExp)
-            |. Parser.spaces
-            |= Parser.lazy (\_ -> parseExp)
-        , Parser.succeed ClosureExp
-            |. Parser.symbol "{"
-            |. Parser.spaces
-            |= Parser.lazy (\_ -> parseClosure)
-            |. Parser.spaces
-            |. Parser.symbol "}"
-        , Parser.lazy (\_ -> parseValue) |> Parser.map Constant
         , parseVariable |> Parser.map Variable
+        , Parser.lazy (\_ -> roundBracketExp)
+        , Parser.keyword "null" |> Parser.map (always NullExp)
+        , parseBool |> Parser.map BoolExp
+        , parseNumber |> Parser.map NumberExp
+        , Parser.lazy (\_ -> parseList) |> Parser.map ListExp
+        , Parser.backtrackable <|
+            Parser.succeed ClosureExp
+                |. Parser.symbol "{"
+                |. Parser.spaces
+                |= Parser.lazy (\_ -> parseClosure)
+                |. Parser.spaces
+                |. Parser.symbol "}"
+        , Parser.lazy (\_ -> parseObject) |> Parser.map ObjectExp
         ]
+        |> Parser.andThen
+            (\exp1 ->
+                --"exp"
+                Parser.oneOf
+                    [ --"exp exp"
+                      Parser.succeed (\exp2 -> Apply exp2 exp1)
+                        |. Parser.spaces
+                        |= Parser.lazy (\_ -> parseExp)
+                    , --else
+                      Parser.succeed exp1
+                    ]
+            )
 
 
 parseStatement : Parser Statement

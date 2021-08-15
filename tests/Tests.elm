@@ -1,11 +1,12 @@
 module Tests exposing (..)
 
-import Ast exposing (Exp(..), Number(..), Value(..))
+import Ast exposing (Exp(..), Number(..))
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Semantics
 import Syntax
 import Test exposing (Test)
+import Util exposing (Value(..))
 
 
 expectError : String -> Expectation
@@ -44,15 +45,19 @@ exp =
                     |> expectError
         , Test.test "Basic Function" <|
             \_ ->
-                "() -> 42"
-                    |> expectSuccess (FunctionVal Nothing (Constant (NumberVal (IntNum 42))))
+                "(() -> 42) null"
+                    |> expectSuccess (NumberVal (IntNum 42))
+        , Test.test "Uniary Function" <|
+            \_ ->
+                "((a) -> 42) null"
+                    |> expectSuccess (NumberVal (IntNum 42))
         ]
 
 
 closureExp : Test
 closureExp =
     Test.describe "Closure Exp"
-        [ Test.test "trivial example" <|
+        [ Test.test "trivial closure" <|
             \_ ->
                 "let a = 42;{a}"
                     |> expectSuccess (NumberVal (IntNum 42))

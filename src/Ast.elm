@@ -4,7 +4,6 @@ module Ast exposing
     , Exp(..)
     , Number(..)
     , Statement(..)
-    , Value(..)
     )
 
 import Dict exposing (Dict)
@@ -13,15 +12,6 @@ import Dict exposing (Dict)
 type Number
     = IntNum Int
     | FloatNum Float
-
-
-type Value
-    = NullVal
-    | BoolVal Bool
-    | NumberVal Number
-    | ListVal (List Value)
-    | ObjectVal (Dict String Value)
-    | FunctionVal (Maybe String) Exp
 
 
 type BuildIn
@@ -70,7 +60,12 @@ type BuildIn
 
 type Exp
     = Variable String
-    | Constant Value
+    | NullExp
+    | BoolExp Bool
+    | NumberExp Number
+    | ListExp (List Exp)
+    | ObjectExp (Dict String Exp)
+    | FunctionExp (Maybe String) Exp
     | ClosureExp Closure
     | Apply Exp Exp
     | BuildInFun BuildIn
