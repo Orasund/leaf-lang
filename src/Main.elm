@@ -1,12 +1,13 @@
 module Main exposing (..)
 
 import Browser
+import El.Internal.Semantics as Semantics
+import El.Internal.Syntax as Syntax
+import El.Language exposing (Value(..))
+import El.Util as Util
 import Element
 import Element.Input as Input
 import Html exposing (Html)
-import Semantics
-import Syntax
-import Util exposing (Value(..))
 
 
 type alias Model =

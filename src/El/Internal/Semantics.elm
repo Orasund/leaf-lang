@@ -1,8 +1,8 @@
-module Semantics exposing (eval)
+module El.Internal.Semantics exposing (eval)
 
-import Ast exposing (BuildIn(..), Closure, Exp(..), Number(..), Statement(..))
 import Dict exposing (Dict)
-import Util exposing (Value(..))
+import El.Language exposing (Closure, Exp(..), Number(..), Statement(..), Value(..))
+import El.Util
 
 
 type Access
@@ -16,7 +16,8 @@ type alias Field =
     }
 
 
-evalBuildin : BuildIn -> Dict String Field -> Result String Value
+
+{--evalBuildin : BuildIn -> Dict String Field -> Result String Value
 evalBuildin buildin context =
     case buildin of
         ------------------------------------------------------------------------
@@ -78,14 +79,14 @@ evalBuildin buildin context =
                                             NumberVal (FloatNum (n1 + n2)) |> Ok
 
                                         ( NumberVal n1, NumberVal n2 ) ->
-                                            NumberVal (FloatNum (Util.numToFloat n1 + Util.numToFloat n2))
+                                            NumberVal (FloatNum (El.Util.numToFloat n1 + El.Util.numToFloat n2))
                                                 |> Ok
 
                                         _ ->
                                             "Can't add "
-                                                ++ Util.valueToString v1
+                                                ++ El.Util.valueToString v1
                                                 ++ " and "
-                                                ++ Util.valueToString v2
+                                                ++ El.Util.valueToString v2
                                                 |> Err
                                 )
                     )
@@ -104,14 +105,14 @@ evalBuildin buildin context =
                                             NumberVal (IntNum (n1 * n2)) |> Ok
 
                                         ( NumberVal n1, NumberVal n2 ) ->
-                                            NumberVal (FloatNum (Util.numToFloat n1 * Util.numToFloat n2))
+                                            NumberVal (FloatNum (El.Util.numToFloat n1 * El.Util.numToFloat n2))
                                                 |> Ok
 
                                         _ ->
                                             "Can't multiply "
-                                                ++ Util.valueToString v1
+                                                ++ El.Util.valueToString v1
                                                 ++ " and "
-                                                ++ Util.valueToString v2
+                                                ++ El.Util.valueToString v2
                                                 |> Err
                                 )
                     )
@@ -130,17 +131,17 @@ evalBuildin buildin context =
                                             NumberVal (IntNum (n2 // n1)) |> Ok
 
                                         ( NumberVal n1, NumberVal n2 ) ->
-                                            Util.numToFloat n2
-                                                / Util.numToFloat n1
+                                            El.Util.numToFloat n2
+                                                / El.Util.numToFloat n1
                                                 |> FloatNum
                                                 |> NumberVal
                                                 |> Ok
 
                                         _ ->
                                             "Can't divide "
-                                                ++ Util.valueToString v2
+                                                ++ El.Util.valueToString v2
                                                 ++ " by "
-                                                ++ Util.valueToString v1
+                                                ++ El.Util.valueToString v1
                                                 |> Err
                                 )
                     )
@@ -158,7 +159,7 @@ evalBuildin buildin context =
                                 NumberVal (IntNum (floor n)) |> Ok
 
                             _ ->
-                                "Can't floor " ++ Util.valueToString v |> Err
+                                "Can't floor " ++ El.Util.valueToString v |> Err
                     )
 
         IsNumber exp ->
@@ -217,7 +218,7 @@ evalBuildin buildin context =
 
                             _ ->
                                 "Can't take the head of "
-                                    ++ Util.valueToString v
+                                    ++ El.Util.valueToString v
                                     |> Err
                     )
 
@@ -236,7 +237,7 @@ evalBuildin buildin context =
 
                             _ ->
                                 "Can't take the tail of "
-                                    ++ Util.valueToString v
+                                    ++ El.Util.valueToString v
                                     |> Err
                     )
 
@@ -255,7 +256,7 @@ evalBuildin buildin context =
 
                                         _ ->
                                             "Can't prepend something to "
-                                                ++ Util.valueToString v2
+                                                ++ El.Util.valueToString v2
                                                 |> Err
                                 )
                     )
@@ -275,9 +276,9 @@ evalBuildin buildin context =
 
                                         _ ->
                                             "Can't append "
-                                                ++ Util.valueToString v1
+                                                ++ El.Util.valueToString v1
                                                 ++ " to "
-                                                ++ Util.valueToString v2
+                                                ++ El.Util.valueToString v2
                                                 |> Err
                                 )
                     )
@@ -297,7 +298,7 @@ evalBuildin buildin context =
 
                             _ ->
                                 "Can't get the length of "
-                                    ++ Util.valueToString v
+                                    ++ El.Util.valueToString v
                                     |> Err
                     )
 
@@ -335,7 +336,7 @@ evalBuildin buildin context =
 
                                         _ ->
                                             "Can't insert a value into "
-                                                ++ Util.valueToString v2
+                                                ++ El.Util.valueToString v2
                                                 |> Err
                                 )
                     )
@@ -354,7 +355,7 @@ evalBuildin buildin context =
 
                             _ ->
                                 "Can't remove a value from "
-                                    ++ Util.valueToString v
+                                    ++ El.Util.valueToString v
                                     |> Err
                     )
 
@@ -372,7 +373,7 @@ evalBuildin buildin context =
 
                             _ ->
                                 "Can't remove a value from "
-                                    ++ Util.valueToString v
+                                    ++ El.Util.valueToString v
                                     |> Err
                     )
 
@@ -391,7 +392,7 @@ evalBuildin buildin context =
 
                             _ ->
                                 "Can't get the size of "
-                                    ++ Util.valueToString v
+                                    ++ El.Util.valueToString v
                                     |> Err
                     )
 
@@ -423,6 +424,7 @@ evalBuildin buildin context =
                             _ ->
                                 BoolVal False
                     )
+--}
 
 
 evalExp : Exp -> Dict String Field -> Result String Value
@@ -436,6 +438,9 @@ evalExp e context =
 
         NullExp ->
             Ok NullVal
+
+        StringExp string ->
+            Ok <| StringVal string
 
         BoolExp bool ->
             Ok (BoolVal bool)
@@ -501,14 +506,16 @@ evalExp e context =
 
                                         _ ->
                                             "Can't apply a value to "
-                                                ++ Util.valueToString v2
+                                                ++ El.Util.valueToString v2
                                                 |> Err
                                 )
                     )
 
-        BuildInFun buildin ->
+
+
+{--BuildInFun buildin ->
             context
-                |> evalBuildin buildin
+                |> evalBuildin buildin--}
 
 
 evalStatement : Statement -> Dict String Field -> Result String (Dict String Field)

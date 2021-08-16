@@ -2,12 +2,12 @@ module Tests exposing (..)
 
 import Ast exposing (Exp(..), Number(..))
 import Dict
+import El.Util exposing (Value(..))
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
 import Semantics
 import Syntax
 import Test exposing (Test)
-import Util exposing (Value(..))
 
 
 expectError : String -> Expectation

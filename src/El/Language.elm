@@ -1,9 +1,9 @@
-module Ast exposing
-    ( BuildIn(..)
-    , Closure
+module El.Language exposing
+    ( Closure
     , Exp(..)
     , Number(..)
     , Statement(..)
+    , Value(..)
     )
 
 import Dict exposing (Dict)
@@ -14,7 +14,19 @@ type Number
     | FloatNum Float
 
 
-type BuildIn
+type Value
+    = NullVal
+    | StringVal String
+    | BoolVal Bool
+    | NumberVal Number
+    | ListVal (List Value)
+    | ObjectVal (Dict String Value)
+    | FunctionVal (Maybe String) Exp
+    | ExtensionVal (Value -> Result String Value)
+
+
+
+{--type BuildIn
     = --------------------------------------------------------------------------
       -- Null Type
       --------------------------------------------------------------------------
@@ -56,11 +68,13 @@ type BuildIn
       -- FunctionExp
       --------------------------------------------------------------------------
     | IsFunction Exp
+--}
 
 
 type Exp
     = Variable String
     | NullExp
+    | StringExp String
     | BoolExp Bool
     | NumberExp Number
     | ListExp (List Exp)
@@ -68,7 +82,10 @@ type Exp
     | FunctionExp (Maybe String) Exp
     | ClosureExp Closure
     | Apply Exp Exp
-    | BuildInFun BuildIn
+
+
+
+--| BuildInFun BuildIn
 
 
 type Statement

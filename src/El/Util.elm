@@ -1,17 +1,8 @@
-module Util exposing (Value(..), deadEndsToString, numToFloat, valueToString)
+module El.Util exposing (deadEndsToString, numToFloat, valueToString)
 
-import Ast exposing (Exp, Number(..))
 import Dict exposing (Dict)
+import El.Language exposing (Exp, Number(..), Value(..))
 import Parser exposing (DeadEnd, Problem(..))
-
-
-type Value
-    = NullVal
-    | BoolVal Bool
-    | NumberVal Number
-    | ListVal (List Value)
-    | ObjectVal (Dict String Value)
-    | FunctionVal (Maybe String) Exp
 
 
 numToFloat : Number -> Float
@@ -29,6 +20,9 @@ valueToString value =
     case value of
         NullVal ->
             "null"
+
+        StringVal string ->
+            "\"" ++ string ++ "\""
 
         BoolVal bool ->
             if bool then
@@ -62,6 +56,9 @@ valueToString value =
 
         FunctionVal _ _ ->
             "function"
+
+        ExtensionVal _ ->
+            "extension"
 
 
 

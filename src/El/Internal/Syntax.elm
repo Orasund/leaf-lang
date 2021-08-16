@@ -1,10 +1,10 @@
-module Syntax exposing (parse)
+module El.Internal.Syntax exposing (parse)
 
-import Ast exposing (BuildIn, Closure, Exp(..), Number(..), Statement(..))
 import Dict exposing (Dict)
+import El.Language exposing (Closure, Exp(..), Number(..), Statement(..))
+import El.Util
 import Parser exposing ((|.), (|=), Parser, Step(..), Trailing(..))
 import Set
-import Util
 
 
 parseVariable : Parser String
@@ -14,6 +14,22 @@ parseVariable =
         , inner = \c -> Char.isAlphaNum c || c == '_'
         , reserved = Set.fromList [ "let", "mut", "null", "true", "false" ]
         }
+
+
+parseString : Parser String
+parseString =
+    Parser.oneOf
+        [ Parser.variable
+            { start = (==) '"'
+            , inner = (/=) '"'
+            , reserved = Set.empty
+            }
+        , Parser.variable
+            { start = (==) '\''
+            , inner = (/=) '\''
+            , reserved = Set.empty
+            }
+        ]
 
 
 parseBool : Parser Bool
@@ -200,18 +216,13 @@ roundBracketExp =
             ]
 
 
-parseBuildIn : Parser BuildIn
-parseBuildIn =
-    Parser.problem "implement buildin functions"
-
-
 parseExp : Parser Exp
 parseExp =
     Parser.oneOf
-        [ parseBuildIn |> Parser.map BuildInFun
-        , parseVariable |> Parser.map Variable
+        [ parseVariable |> Parser.map Variable
         , Parser.lazy (\_ -> roundBracketExp)
         , Parser.keyword "null" |> Parser.map (always NullExp)
+        , parseString |> Parser.map StringExp
         , parseBool |> Parser.map BoolExp
         , parseNumber |> Parser.map NumberExp
         , Parser.lazy (\_ -> parseList) |> Parser.map ListExp
@@ -299,4 +310,4 @@ parse =
             |. Parser.spaces
             |. Parser.end
         )
-        >> Result.mapError Util.deadEndsToString
+        >> Result.mapError El.Util.deadEndsToString
