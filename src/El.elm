@@ -1,7 +1,6 @@
 module El exposing (any, binaryFun, trinaryFun, typed, unaryFun)
 
 import El.Language exposing (Exp(..), Number(..), Value(..))
-import El.Type as Type
 
 
 any : (Value -> Value) -> Value
@@ -14,9 +13,9 @@ typed mapper fun =
     ExtensionVal (mapper >> Result.map fun)
 
 
-unaryFun : ((a -> Value) -> Value) -> (a -> Value) -> Value
-unaryFun fun =
-    fun
+unaryFun : (a -> Value) -> ((a -> Value) -> Value) -> Value
+unaryFun a fun =
+    fun a
 
 
 binaryFun : (a -> b -> Value) -> ((a -> Value) -> Value) -> ((b -> Value) -> Value) -> Value
