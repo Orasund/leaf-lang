@@ -1,12 +1,13 @@
 module Tests exposing (..)
 
-import Ast exposing (Exp(..), Number(..))
 import Dict
-import El.Util exposing (Value(..))
+import El.Core as Core
+import El.Internal.Semantics as Semantics
+import El.Internal.Syntax as Syntax
+import El.Language as Language exposing (Exp(..), Number(..), Value(..))
+import El.Util
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
-import Semantics
-import Syntax
 import Test exposing (Test)
 
 
@@ -18,7 +19,7 @@ expectError string =
     of
         Ok ok ->
             ok
-                |> Semantics.eval
+                |> Semantics.eval Core.package
                 |> Expect.err
 
         Err err ->
@@ -29,7 +30,7 @@ expectSuccess : Value -> String -> Expectation
 expectSuccess value string =
     string
         |> Syntax.parse
-        |> Result.andThen Semantics.eval
+        |> Result.andThen (Semantics.eval Core.package)
         |> Expect.equal (Ok value)
 
 
@@ -40,6 +41,10 @@ exp =
             \_ ->
                 "42"
                     |> expectSuccess (NumberVal (IntNum 42))
+        , Test.test "String Exp" <|
+            \_ ->
+                "\"Hello World\""
+                    |> expectSuccess (StringVal "Hello World")
         , Test.test "Variable Exp" <|
             \_ ->
                 "a"
@@ -101,4 +106,18 @@ statement =
             \_ ->
                 "mut a = 0; a = 42; a"
                     |> expectSuccess (NumberVal (IntNum 42))
+        ]
+
+
+coreLib : Test
+coreLib =
+    Test.describe "Core Libary"
+        [ Test.test "Eq" <|
+            \_ ->
+                "equal 42 0"
+                    |> expectSuccess (BoolVal False)
+        , Test.test "Application" <|
+            \_ ->
+                "equal (equal 42 0) false"
+                    |> expectSuccess (BoolVal True)
         ]

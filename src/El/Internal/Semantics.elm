@@ -1,4 +1,4 @@
-module El.Internal.Semantics exposing (eval)
+module El.Internal.Semantics exposing (Access(..), Field, eval)
 
 import Dict exposing (Dict)
 import El.Language exposing (Closure, Exp(..), Number(..), Statement(..), Value(..))
@@ -281,6 +281,9 @@ evalExp e context =
                                                 |> Maybe.withDefault context
                                                 |> evalExp exp3
 
+                                        ExtensionVal fun ->
+                                            fun v1
+
                                         _ ->
                                             "Can't apply a value to "
                                                 ++ El.Util.valueToString v2
@@ -348,6 +351,6 @@ evalClosure closure dict =
         |> Result.andThen (evalExp closure.return)
 
 
-eval : Closure -> Result String Value
-eval closure =
-    evalClosure closure Dict.empty
+eval : Dict String Field -> Closure -> Result String Value
+eval dict closure =
+    evalClosure closure dict

@@ -2,14 +2,15 @@ module El.Core.Number exposing (package)
 
 import Dict exposing (Dict)
 import El
+import El.Internal.Semantics exposing (Access(..), Field)
 import El.Language exposing (Number(..), Value(..))
 import El.Type as Type
 import El.Util as Util
 
 
-add : ( String, Value )
-add =
-    ( "add"
+plus : ( String, Value )
+plus =
+    ( "plus"
     , El.binaryFun
         (\v1 v2 ->
             case ( v1, v2 ) of
@@ -27,9 +28,9 @@ add =
     )
 
 
-sub : ( String, Value )
-sub =
-    ( "sub"
+minus : ( String, Value )
+minus =
+    ( "minus"
     , El.binaryFun
         (\v1 v2 ->
             case ( v1, v2 ) of
@@ -149,10 +150,8 @@ ceilingFun =
 
 
 toFloat : ( String, Value )
-
-
-ceilingFun =
-    ( "ceiling"
+toFloat =
+    ( "toFloat"
     , El.unaryFun
         (\n ->
             NumberVal (FloatNum (toFloat n))
@@ -161,10 +160,10 @@ ceilingFun =
     )
 
 
-package : Dict String Value
+package : Dict String Field
 package =
-    [ add
-    , sub
+    [ plus
+    , minus
     , mult
     , divBy
     , modByFun
@@ -172,5 +171,7 @@ package =
     , roundFun
     , floorFun
     , ceilingFun
+    , toFloat
     ]
+        |> List.map (Tuple.mapSecond (\v -> { value = v, access = Read }))
         |> Dict.fromList

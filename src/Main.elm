@@ -1,6 +1,7 @@
 module Main exposing (..)
 
 import Browser
+import El.Core as Core
 import El.Internal.Semantics as Semantics
 import El.Internal.Syntax as Syntax
 import El.Language exposing (Value(..))
@@ -34,7 +35,7 @@ main =
 init : () -> ( Model, Cmd Msg )
 init () =
     ( { result = Err ""
-      , text = "[-1,42.0,{a:42}]"
+      , text = "equal (equal 40 2) false"
       }
     , Cmd.none
     )
@@ -56,7 +57,7 @@ update msg model =
                 | result =
                     model.text
                         |> Syntax.parse
-                        |> Result.andThen Semantics.eval
+                        |> Result.andThen (Semantics.eval Core.package)
               }
             , Cmd.none
             )

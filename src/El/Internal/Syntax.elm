@@ -3,7 +3,7 @@ module El.Internal.Syntax exposing (parse)
 import Dict exposing (Dict)
 import El.Language exposing (Closure, Exp(..), Number(..), Statement(..))
 import El.Util
-import Parser exposing ((|.), (|=), Parser, Step(..), Trailing(..))
+import Parser exposing ((|.), (|=), Nestable(..), Parser, Step(..), Trailing(..))
 import Set
 
 
@@ -19,16 +19,30 @@ parseVariable =
 parseString : Parser String
 parseString =
     Parser.oneOf
-        [ Parser.variable
-            { start = (==) '"'
-            , inner = (/=) '"'
-            , reserved = Set.empty
-            }
-        , Parser.variable
-            { start = (==) '\''
-            , inner = (/=) '\''
-            , reserved = Set.empty
-            }
+        [ Parser.succeed identity
+            |. Parser.symbol "\""
+            |= Parser.variable
+                { start = (/=) '"'
+                , inner = (/=) '"'
+                , reserved = Set.empty
+                }
+            |. Parser.symbol "\""
+        , Parser.succeed identity
+            |. Parser.symbol "'"
+            |= Parser.variable
+                { start = (==) '\''
+                , inner = (/=) '\''
+                , reserved = Set.empty
+                }
+            |. Parser.symbol "'"
+        ]
+
+
+comment : Parser ()
+comment =
+    Parser.oneOf
+        [ Parser.lineComment "//"
+        , Parser.multiComment "/*" "*/" Nestable
         ]
 
 
@@ -197,29 +211,22 @@ roundBracketExp =
                 |. Parser.spaces
               )
                 |> Parser.andThen functionOrVariable
+                |> Parser.backtrackable
             , --"(exp)"
               Parser.succeed identity
                 |= parseExp
                 |. Parser.spaces
                 |. Parser.symbol ")"
-                |> Parser.andThen
-                    (\exp1 ->
-                        Parser.oneOf
-                            [ --"(exp) exp"
-                              Parser.succeed (\exp2 -> Apply exp2 exp1)
-                                |. Parser.spaces
-                                |= parseExp
-                            , --else
-                              Parser.succeed exp1
-                            ]
-                    )
             ]
 
 
-parseExp : Parser Exp
-parseExp =
+singleExp : Parser Exp
+singleExp =
     Parser.oneOf
-        [ parseVariable |> Parser.map Variable
+        [ Parser.succeed identity
+            |. comment
+            |= Parser.lazy (\_ -> singleExp)
+        , parseVariable |> Parser.map Variable
         , Parser.lazy (\_ -> roundBracketExp)
         , Parser.keyword "null" |> Parser.map (always NullExp)
         , parseString |> Parser.map StringExp
@@ -235,24 +242,51 @@ parseExp =
                 |. Parser.symbol "}"
         , Parser.lazy (\_ -> parseObject) |> Parser.map ObjectExp
         ]
-        |> Parser.andThen
-            (\exp1 ->
-                --"exp"
-                Parser.oneOf
-                    [ --"exp exp"
-                      Parser.succeed (\exp2 -> Apply exp2 exp1)
-                        |. Parser.spaces
-                        |= Parser.lazy (\_ -> parseExp)
-                    , --else
-                      Parser.succeed exp1
-                    ]
+
+
+multiExp : Exp -> Parser Exp
+multiExp e =
+    let
+        expHelp : List Exp -> Parser (Step (List Exp) (List Exp))
+        expHelp revList =
+            Parser.oneOf
+                [ Parser.succeed (\a -> Loop (a :: revList))
+                    |. Parser.spaces
+                    |= singleExp
+                , Parser.succeed (Done (revList |> List.reverse))
+                ]
+    in
+    Parser.loop [] expHelp
+        |> Parser.map
+            (\list ->
+                case list of
+                    --"exp ... exp"
+                    a1 :: tail ->
+                        tail
+                            |> List.foldl (\next f -> Apply next f)
+                                (Apply a1 e)
+                            |> Debug.log "result"
+
+                    --else
+                    [] ->
+                        e
             )
+
+
+parseExp : Parser Exp
+parseExp =
+    --"exp"
+    singleExp
+        |> Parser.andThen multiExp
 
 
 parseStatement : Parser Statement
 parseStatement =
     Parser.oneOf
-        [ Parser.succeed Let
+        [ Parser.succeed identity
+            |. comment
+            |= Parser.lazy (\_ -> parseStatemen)
+        , Parser.succeed Let
             |. Parser.keyword "let"
             |. Parser.spaces
             |= parseVariable

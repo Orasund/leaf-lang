@@ -2,6 +2,7 @@ module El.Core exposing (notEqual, package)
 
 import Dict exposing (Dict)
 import El
+import El.Internal.Semantics exposing (Access(..), Field)
 import El.Language exposing (Value(..))
 import El.Type as Type
 
@@ -131,7 +132,7 @@ ifFun =
     )
 
 
-package : Dict String Value
+package : Dict String Field
 package =
     [ isNull
     , isBool
@@ -147,4 +148,5 @@ package =
     , notEqual
     , ifFun
     ]
+        |> List.map (Tuple.mapSecond (\v -> { value = v, access = Read }))
         |> Dict.fromList
