@@ -1,8 +1,8 @@
-module El.Type exposing (Type(..), any, bool, dict, extension, float, function, int, is, list, null, nullable, number, record, string, stringLiteral, union)
+module Internal.Type exposing (Type(..), any, bool, dict, extension, float, function, int, is, list, null, nullable, number, record, string, stringLiteral, union)
 
 import Dict exposing (Dict)
-import El.Language exposing (Exp, Number(..), Value(..))
-import El.Util as Util
+import Internal.Language exposing (Exp, Number(..), Value(..))
+import Internal.Util as Util
 import List
 import Set exposing (Set)
 
@@ -51,11 +51,11 @@ nullable mapper v0 =
                 |> Result.map Just
 
 
-string : Value -> Result String ()
+string : Value -> Result String String
 string v =
     case v of
-        StringVal _ ->
-            Ok <| ()
+        StringVal s ->
+            Ok <| s
 
         _ ->
             Err <| "I expected a symbol but got " ++ Util.valueToString v ++ " instead."

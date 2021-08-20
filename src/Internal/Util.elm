@@ -1,7 +1,7 @@
-module El.Util exposing (deadEndsToString, numToFloat, valueToString)
+module Internal.Util exposing (deadEndsToString, numToFloat, valueToString)
 
-import Dict exposing (Dict)
-import El.Language exposing (Exp, Number(..), Value(..))
+import Dict
+import Internal.Language exposing (Number(..), Value(..))
 import Parser exposing (DeadEnd, Problem(..))
 
 

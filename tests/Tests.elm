@@ -1,13 +1,13 @@
 module Tests exposing (..)
 
 import Dict
-import El.Core as Core
 import El.Internal.Semantics as Semantics
 import El.Internal.Syntax as Syntax
 import El.Language as Language exposing (Exp(..), Number(..), Value(..))
 import El.Util
 import Expect exposing (Expectation)
 import Fuzz exposing (Fuzzer, int, list, string)
+import Leaf.Core as Core
 import Test exposing (Test)
 
 

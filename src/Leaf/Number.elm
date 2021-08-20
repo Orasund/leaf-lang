@@ -1,16 +1,18 @@
-module El.Core.Number exposing (package)
+module Leaf.Number exposing (..)
+
+{--module El.Core.Number exposing (package)
 
 import Dict exposing (Dict)
-import El
+import Leaf
 import El.Internal.Semantics exposing (Access(..), Field)
 import El.Language exposing (Number(..), Value(..))
-import El.Type as Type
+import Internal.Type as Type
 import El.Util as Util
 
 
 plus : ( String, Value )
 plus =
-    ( "plus"
+    ( Leaflus"
     , El.binaryFun
         (\v1 v2 ->
             case ( v1, v2 ) of
@@ -22,15 +24,15 @@ plus =
 
                 ( n1, n2 ) ->
                     NumberVal (FloatNum (Util.numToFloat n1 + Util.numToFloat n2))
-        )
-        (El.typed Type.number)
+        )Leaf
+        (Leaf.typed Type.number)
         (El.typed Type.number)
     )
 
 
 minus : ( String, Value )
 minus =
-    ( "minus"
+    ( Leafinus"
     , El.binaryFun
         (\v1 v2 ->
             case ( v1, v2 ) of
@@ -42,15 +44,15 @@ minus =
 
                 ( n1, n2 ) ->
                     NumberVal (FloatNum (Util.numToFloat n2 - Util.numToFloat n1))
-        )
-        (El.typed Type.number)
+        )Leaf
+        (Leaf.typed Type.number)
         (El.typed Type.number)
     )
 
 
 mult : ( String, Value )
 mult =
-    ( "mult"
+    ( Leafult"
     , El.binaryFun
         (\v1 v2 ->
             case ( v1, v2 ) of
@@ -62,15 +64,15 @@ mult =
 
                 ( n1, n2 ) ->
                     NumberVal (FloatNum (Util.numToFloat n1 * Util.numToFloat n2))
-        )
-        (El.typed Type.number)
+        )Leaf
+        (Leaf.typed Type.number)
         (El.typed Type.number)
     )
 
 
 divBy : ( String, Value )
 divBy =
-    ( "divBy"
+    ( LeafivBy"
     , El.binaryFun
         (\v1 v2 ->
             case ( v1, v2 ) of
@@ -82,27 +84,27 @@ divBy =
 
                 ( n1, n2 ) ->
                     NumberVal (FloatNum (Util.numToFloat n2 / Util.numToFloat n1))
-        )
-        (El.typed Type.number)
+        )Leaf
+        (Leaf.typed Type.number)
         (El.typed Type.number)
     )
 
 
 modByFun : ( String, Value )
 modByFun =
-    ( "modBy"
+    ( LeafodBy"
     , El.binaryFun
         (\n1 n2 ->
             NumberVal (IntNum (n2 |> modBy n1))
-        )
-        (El.typed Type.int)
+        )Leaf
+        (Leaf.typed Type.int)
         (El.typed Type.int)
     )
 
 
 absFun : ( String, Value )
 absFun =
-    ( "abs"
+    ( Leafbs"
     , El.unaryFun
         (\v1 ->
             case v1 of
@@ -111,40 +113,40 @@ absFun =
 
                 FloatNum n ->
                     NumberVal (FloatNum (abs n))
-        )
+        )Leaf
         (El.typed Type.number)
     )
 
 
 roundFun : ( String, Value )
 roundFun =
-    ( "round"
+    ( Leafound"
     , El.unaryFun
         (\n ->
             NumberVal (IntNum (round n))
-        )
+        )Leaf
         (El.typed Type.float)
     )
 
 
 floorFun : ( String, Value )
 floorFun =
-    ( "floor"
+    ( Leafloor"
     , El.unaryFun
         (\n ->
             NumberVal (IntNum (floor n))
-        )
+        )Leaf
         (El.typed Type.float)
     )
 
 
 ceilingFun : ( String, Value )
 ceilingFun =
-    ( "ceiling"
+    ( Leafeiling"
     , El.unaryFun
         (\n ->
             NumberVal (IntNum (ceiling n))
-        )
+        )Leaf
         (El.typed Type.float)
     )
 
@@ -153,11 +155,11 @@ toFloat : ( String, Value )
 toFloat =
     ( "toFloat"
     , El.unaryFun
-        (\n ->
+      Leaf(\n ->
             NumberVal (FloatNum (toFloat n))
         )
         (El.typed Type.int)
-    )
+    )Leaf
 
 
 package : Dict String Field
@@ -175,3 +177,4 @@ package =
     ]
         |> List.map (Tuple.mapSecond (\v -> { value = v, access = Read }))
         |> Dict.fromList
+--}

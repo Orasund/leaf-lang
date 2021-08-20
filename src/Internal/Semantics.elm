@@ -1,8 +1,8 @@
-module El.Internal.Semantics exposing (Access(..), Field, eval)
+module Internal.Semantics exposing (Access(..), Field, eval)
 
 import Dict exposing (Dict)
-import El.Language exposing (Closure, Exp(..), Number(..), Statement(..), Value(..))
-import El.Util
+import Internal.Language as Language exposing (Closure, Exp(..), Number(..), Statement(..), Value(..))
+import Internal.Util
 
 
 type Access
@@ -11,7 +11,7 @@ type Access
 
 
 type alias Field =
-    { value : Value
+    { value : Language.Value
     , access : Access
     }
 
@@ -286,7 +286,7 @@ evalExp e context =
 
                                         _ ->
                                             "Can't apply a value to "
-                                                ++ El.Util.valueToString v2
+                                                ++ Internal.Util.valueToString v2
                                                 |> Err
                                 )
                     )

@@ -1,8 +1,8 @@
-module El.Internal.Syntax exposing (parse)
+module Internal.Syntax exposing (parse)
 
 import Dict exposing (Dict)
-import El.Language exposing (Closure, Exp(..), Number(..), Statement(..))
-import El.Util
+import Internal.Language exposing (Closure, Exp(..), Number(..), Statement(..))
+import Internal.Util as Util
 import Parser exposing ((|.), (|=), Nestable(..), Parser, Step(..), Trailing(..))
 import Set
 
@@ -285,7 +285,7 @@ parseStatement =
     Parser.oneOf
         [ Parser.succeed identity
             |. comment
-            |= Parser.lazy (\_ -> parseStatemen)
+            |= Parser.lazy (\_ -> parseStatement)
         , Parser.succeed Let
             |. Parser.keyword "let"
             |. Parser.spaces
@@ -344,4 +344,4 @@ parse =
             |. Parser.spaces
             |. Parser.end
         )
-        >> Result.mapError El.Util.deadEndsToString
+        >> Result.mapError Util.deadEndsToString
