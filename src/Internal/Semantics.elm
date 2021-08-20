@@ -260,6 +260,7 @@ evalExp e context =
             context
                 |> Dict.map (\_ v -> { v | access = Read })
                 |> evalClosure closure
+                |> Result.map Tuple.first
 
         Apply exp1 exp2 ->
             context
@@ -343,14 +344,14 @@ evalStatement statement context =
                     Err <| "Variable " ++ string ++ " is not defined"
 
 
-evalClosure : Closure -> Dict String Field -> Result String Value
+evalClosure : Closure -> Dict String Field -> Result String ( Value, Dict String Field )
 evalClosure closure dict =
     closure.statements
         |> List.foldl (\statement -> Result.andThen (evalStatement statement))
             (Ok dict)
-        |> Result.andThen (evalExp closure.return)
+        |> Result.andThen (\d -> d |> evalExp closure.return |> Result.map (\v -> ( v, d )))
 
 
-eval : Dict String Field -> Closure -> Result String Value
+eval : Dict String Field -> Closure -> Result String ( Value, Dict String Field )
 eval dict closure =
     evalClosure closure dict

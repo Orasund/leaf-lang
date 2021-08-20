@@ -1,12 +1,10 @@
 module Tests exposing (..)
 
 import Dict
-import El.Internal.Semantics as Semantics
-import El.Internal.Syntax as Syntax
-import El.Language as Language exposing (Exp(..), Number(..), Value(..))
-import El.Util
 import Expect exposing (Expectation)
-import Fuzz exposing (Fuzzer, int, list, string)
+import Internal.Language exposing (Exp(..), Number(..), Value(..))
+import Internal.Semantics as Semantics
+import Internal.Syntax as Syntax
 import Leaf.Core as Core
 import Test exposing (Test)
 
@@ -31,6 +29,7 @@ expectSuccess value string =
     string
         |> Syntax.parse
         |> Result.andThen (Semantics.eval Core.package)
+        |> Result.map Tuple.first
         |> Expect.equal (Ok value)
 
 
