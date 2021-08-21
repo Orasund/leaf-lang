@@ -50,7 +50,7 @@ exp =
                     |> expectError
         , Test.test "Types" <|
             \_ ->
-                "[-1,42.,{a:42}]"
+                "[-1,42.0,{a:42}]"
                     |> expectSuccess
                         (ListVal
                             [ NumberVal (IntNum -1)

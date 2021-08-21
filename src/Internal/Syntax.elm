@@ -11,7 +11,7 @@ parseVariable : Parser String
 parseVariable =
     Parser.variable
         { start = Char.isLower
-        , inner = \c -> Char.isAlphaNum c || c == '_'
+        , inner = \c -> Char.isAlphaNum c || c == '_' || c == ':'
         , reserved = Set.fromList [ "let", "mut", "null", "true", "false" ]
         }
 
@@ -265,7 +265,34 @@ multiExp e =
                         tail
                             |> List.foldl (\next f -> Apply next f)
                                 (Apply a1 e)
-                            |> Debug.log "result"
+
+                    --else
+                    [] ->
+                        e
+            )
+
+
+pipeExp : Exp -> Parser Exp
+pipeExp e =
+    let
+        expHelp : List Exp -> Parser (Step (List Exp) (List Exp))
+        expHelp revList =
+            Parser.oneOf
+                [ Parser.succeed (\a -> Loop (a :: revList))
+                    |. Parser.symbol "."
+                    |= (singleExp |> Parser.andThen multiExp)
+                , Parser.succeed (Done (revList |> List.reverse))
+                ]
+    in
+    Parser.loop [] expHelp
+        |> Parser.map
+            (\list ->
+                case list of
+                    --"exp . ... . exp"
+                    a1 :: tail ->
+                        tail
+                            |> List.foldl (\next f -> Apply f next)
+                                (Apply e a1)
 
                     --else
                     [] ->
@@ -277,7 +304,7 @@ parseExp : Parser Exp
 parseExp =
     --"exp"
     singleExp
-        |> Parser.andThen multiExp
+        |> Parser.andThen pipeExp
 
 
 parseStatement : Parser Statement

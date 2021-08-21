@@ -39,10 +39,21 @@ helloWorldTest =
                         )
         , Test.test "Context-sensitive in Elm" <|
             \_ ->
+                let
+                    context =
+                        [ StringVal "World" |> Leaf.field "name"
+                         , (\s2 s1 -> StringVal (s1 ++ s2))
+                            |> Leaf.binaryFun (Leaf.typed Leaf.asString)
+                                (Leaf.typed Leaf.asString)
+                            |> Leaf.field "append"
+                         ]
+                            |> Dict.fromList
+                in
                 "\"Hello \".append name"
-                    |> Leaf.run Dict.empty
+                    |> Leaf.run context
+                    |> Result.map Tuple.first
                     |> Expect.equal
                         (Ok <|
-                            ( StringVal "Hello World", Dict.empty )
+                            ( StringVal "Hello World")
                         )
         ]
