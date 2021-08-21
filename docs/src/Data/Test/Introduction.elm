@@ -21,13 +21,9 @@ tests =
 helloWorldString : String
 helloWorldString =
     """
-   "\\"Hello World\\""
-      |> Leaf.eval Dict.empty
-      |> Expect.equal
-          (Ok <|
-              ( StringVal "Hello World", Dict.empty )
-          )
-    """
+    "\\"Hello World\\""
+        |> Leaf.run Dict.empty
+"""
 
 
 helloWorldTest : Test
@@ -36,7 +32,15 @@ helloWorldTest =
         [ Test.test "Hello World in Elm" <|
             \_ ->
                 "\"Hello World\""
-                    |> Leaf.eval Dict.empty
+                    |> Leaf.run Dict.empty
+                    |> Expect.equal
+                        (Ok <|
+                            ( StringVal "Hello World", Dict.empty )
+                        )
+        , Test.test "Context-sensitive in Elm" <|
+            \_ ->
+                "\"Hello \".append name"
+                    |> Leaf.run Dict.empty
                     |> Expect.equal
                         (Ok <|
                             ( StringVal "Hello World", Dict.empty )

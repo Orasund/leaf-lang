@@ -1,25 +1,33 @@
 module Main exposing (main)
 
+import Data.Shared as Shared exposing (Model, Msg)
 import ElmBook exposing (Book)
+import ElmBook.ComponentOptions as ComponentOptions
+import ElmBook.StatefulOptions as StatefulOptions
 import ElmBook.ThemeOptions as ThemeOptions
-import Html
 import Page.Introduction
 import View.Logo as Logo
+import View.Palette as Palette
 
 
-main : Book ()
+main : Book Model
 main =
     ElmBook.book "Leaf"
+        |> ElmBook.withStatefulOptions
+            [ StatefulOptions.initialState Shared.init
+            ]
         |> ElmBook.withThemeOptions
             [ ThemeOptions.subtitle "Scripting Language"
             , ThemeOptions.logo Logo.view
-            , ThemeOptions.background "#73E2A7"
+            , ThemeOptions.background Palette.green
             , ThemeOptions.accent "black"
-            , ThemeOptions.navBackground "#535657"
-            , ThemeOptions.navAccent "#535657"
+            , ThemeOptions.navBackground Palette.gray
+            , ThemeOptions.navAccent Palette.gray
             , ThemeOptions.navAccentHighlight "white"
             , ThemeOptions.useHashBasedNavigation
             ]
+        |> ElmBook.withComponentOptions
+            [ ComponentOptions.displayInline ]
         |> ElmBook.withChapters
             [ Page.Introduction.chapter
             ]

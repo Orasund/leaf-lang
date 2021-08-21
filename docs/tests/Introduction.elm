@@ -13,7 +13,7 @@ import Test exposing (..)
 evaluateTest : Example -> Expectation
 evaluateTest example =
     example.code
-        |> Leaf.eval Dict.empty
+        |> Leaf.run Dict.empty
         |> Result.map Tuple.first
         |> Expect.equal (Ok example.result)
 

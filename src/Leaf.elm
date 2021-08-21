@@ -1,5 +1,5 @@
 module Leaf exposing
-    ( Number(..), Exp, Value(..), eval
+    ( Number(..), Exp, Value(..), run
     , Field, field, mutField, unaryFun, binaryFun, trinaryFun
     , untyped, typed, asNull, asBool, asString, asFloat, asInt, asNumber, asNullable, asAnyList, asList, asObject, asFunction, asExtension
     , toString, toFloat
@@ -20,7 +20,7 @@ import Leaf exposing (Value(..))
   --> (StringVal "\"Hello World\"",Dict.empty)
 ```
 
-@docs Number, Exp, Value, eval
+@docs Number, Exp, Value, run
 
 
 # Context-Sensitive Evaluation
@@ -228,13 +228,13 @@ let
       |> Dict.fromList
 in
 "\"Hello \".append name"
-  |> El.eval context
+  |> El.run context
   --> Ok (StringVal "\"Hello World\"",context)
 ```
 
 -}
-eval : Dict String Field -> String -> Result String ( Value, Dict String Field )
-eval context =
+run : Dict String Field -> String -> Result String ( Value, Dict String Field )
+run context =
     Syntax.parse
         >> Result.andThen
             (Semantics.eval context)

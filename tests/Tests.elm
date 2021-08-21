@@ -17,7 +17,7 @@ expectError string =
     of
         Ok ok ->
             ok
-                |> Semantics.eval Core.package
+                |> Semantics.run Core.package
                 |> Expect.err
 
         Err err ->
@@ -28,7 +28,7 @@ expectSuccess : Value -> String -> Expectation
 expectSuccess value string =
     string
         |> Syntax.parse
-        |> Result.andThen (Semantics.eval Core.package)
+        |> Result.andThen (Semantics.run Core.package)
         |> Result.map Tuple.first
         |> Expect.equal (Ok value)
 
