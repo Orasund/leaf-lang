@@ -1,6 +1,10 @@
 module View.Example exposing (view)
 
 import Data.Shared as Shared
+import Element exposing (Element)
+import Element.Border as Border
+import Element.Font as Font
+import Element.Input as Input
 import ElmBook exposing (Msg)
 import ElmBook.Actions as Actions
 import Html exposing (Html)
@@ -18,41 +22,44 @@ view :
     , onChange : String -> String -> Shared.Msg
     , onRun : String -> Shared.Msg
     }
-    -> Html (Msg Shared.Model)
+    -> Element (Msg Shared.Model)
 view example =
     let
         input s =
-            Html.div [ Attributes.style "position" "relative" ]
-                [ Html.textarea
-                    [ Attributes.class "elm-book-md__code elm-book-monospace elm-book-shadows-light"
-                    , Attributes.style "width" "100%"
-                    , Attributes.style "color" "white"
-                    , Attributes.style "height" "auto"
-
-                    --, Attributes.attribute "contenteditable" "True"
-                    , Events.onInput
-                        (example.onChange example.label
-                            >> Actions.updateStateWith Shared.update
-                        )
+            Input.multiline
+                [ Input.button
+                    [ Attributes.style "background-color" Palette.green |> Element.htmlAttribute
+                    , Element.padding 10
+                    , Font.size 20
+                    , Border.rounded 6
+                    , Border.width 4
+                    , Attributes.style "border-color" "white" |> Element.htmlAttribute
                     ]
-                    [ Html.text s ]
-                , Html.button
-                    [ Attributes.style "position" "absolute"
-                    , Attributes.style "right" "8px"
-                    , Attributes.style "top" "8px"
-                    , Attributes.style "background-color" Palette.green
-                    , Attributes.style "padding" "10px"
-                    , Attributes.style "font-size" "20px"
-                    , Attributes.style "border-radius" "6px"
-                    , Attributes.style "border-size" "4px"
-                    , Attributes.style "border-color" "white"
-                    , Events.onClick
-                        (example.onRun example.label
+                    { onPress =
+                        example.onRun example.label
                             |> Actions.updateStateWith Shared.update
-                        )
-                    ]
-                    [ Html.text "run" ]
+                            |> Just
+                    , label = Element.text "run"
+                    }
+                    |> Element.el
+                        [ Element.alignRight
+                        , Element.alignTop
+                        , Element.padding 8
+                        ]
+                    |> Element.above
+                , Attributes.class "elm-book-md__code elm-book-monospace elm-book-shadows-light"
+                    |> Element.htmlAttribute
+                , Element.width Element.fill
+                , Attributes.style "color" "white" |> Element.htmlAttribute
                 ]
+                { onChange =
+                    example.onChange example.label
+                        >> Actions.updateStateWith Shared.update
+                , text = s
+                , placeholder = Nothing
+                , label = Input.labelHidden "leaf script"
+                , spellcheck = False
+                }
 
         code s =
             s
@@ -62,19 +69,20 @@ view example =
                     (\content ->
                         Html.pre [ Attributes.class "elm-book-md__code elm-book-monospace elm-book-shadows-light" ]
                             [ content ]
+                            |> Element.html
                     )
                 |> Result.withDefault
                     (Html.pre [ Attributes.class "elm-book-md__code-default elm-book-monospace elm-book-shadows-light" ]
                         [ Html.text s ]
+                        |> Element.html
                     )
     in
-    Html.div [ Attributes.class "elm-book-md" ] <|
+    Element.column [ Attributes.class "elm-book-md" |> Element.htmlAttribute ] <|
         input example.code
             :: (example.result
                     |> Maybe.map
                         (\c ->
-                            [ Html.br [] []
-                            , code c
+                            [ code c
                             ]
                         )
                     |> Maybe.withDefault []

@@ -3,9 +3,11 @@ module Page.Introduction exposing (chapter)
 import Data.Shared as Shared exposing (Model)
 import Data.Test.Introduction as Test
 import Dict
+import Element exposing (Element)
 import ElmBook exposing (Msg)
 import ElmBook.Actions as Actions
-import ElmBook.Chapter as Chapter exposing (Chapter)
+import ElmBook.Chapter as Chapter
+import ElmBook.ElmUI as ElmBookUI exposing (Chapter)
 import Html exposing (Html)
 import Leaf
 import View.Example as Example
@@ -14,7 +16,7 @@ import View.Example as Example
 chapter : Chapter Model
 chapter =
     let
-        compoentList : List ( String, Model -> Html (Msg Model) )
+        compoentList : List ( String, Model -> Element (Msg Model) )
         compoentList =
             Test.tests
                 |> Dict.toList
