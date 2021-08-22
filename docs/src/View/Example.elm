@@ -2,6 +2,7 @@ module View.Example exposing (view)
 
 import Data.Shared as Shared
 import Element exposing (Element)
+import Element.Background as Background
 import Element.Border as Border
 import Element.Font as Font
 import Element.Input as Input
@@ -32,8 +33,8 @@ view example =
                     , Element.padding 10
                     , Font.size 20
                     , Border.rounded 6
-                    , Border.width 4
                     , Attributes.style "border-color" "white" |> Element.htmlAttribute
+                    , Element.centerY
                     ]
                     { onPress =
                         example.onRun example.label
@@ -44,13 +45,21 @@ view example =
                     |> Element.el
                         [ Element.alignRight
                         , Element.alignTop
-                        , Element.padding 8
+                        , Element.paddingXY 12 6
+                        , Element.height <| Element.px 58
                         ]
-                    |> Element.above
+                    |> Element.inFront
                 , Attributes.class "elm-book-md__code elm-book-monospace elm-book-shadows-light"
                     |> Element.htmlAttribute
+                , Border.rounded 6
+                , Background.color <| Element.rgb255 42 53 77
+                , Font.size 18
+                , Border.width 0
+                , Element.paddingXY 24 20
                 , Element.width Element.fill
                 , Attributes.style "color" "white" |> Element.htmlAttribute
+                , Font.family
+                    [ Font.typeface "Fira Code", Font.monospace ]
                 ]
                 { onChange =
                     example.onChange example.label
@@ -70,14 +79,22 @@ view example =
                         Html.pre [ Attributes.class "elm-book-md__code elm-book-monospace elm-book-shadows-light" ]
                             [ content ]
                             |> Element.html
+                            |> Element.el [ Element.width Element.fill ]
                     )
                 |> Result.withDefault
                     (Html.pre [ Attributes.class "elm-book-md__code-default elm-book-monospace elm-book-shadows-light" ]
                         [ Html.text s ]
                         |> Element.html
+                        |> Element.el [ Element.width Element.fill ]
                     )
     in
-    Element.column [ Attributes.class "elm-book-md" |> Element.htmlAttribute ] <|
+    Element.column
+        [ Attributes.class "elm-book-md" |> Element.htmlAttribute
+        , Element.width Element.fill
+        , Element.centerX
+        , Element.spacing 12
+        ]
+    <|
         input example.code
             :: (example.result
                     |> Maybe.map
