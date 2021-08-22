@@ -1,7 +1,7 @@
 module Internal.Semantics exposing (Access(..), Field, eval)
 
 import Dict exposing (Dict)
-import Internal.Language as Language exposing (Closure, Exp(..), Number(..), Statement(..), Value(..))
+import Internal.Language as Language exposing (Closure, Exp(..), Statement(..), Value(..))
 import Internal.Util
 
 
@@ -222,8 +222,11 @@ evalExp e context =
         BoolExp bool ->
             Ok (BoolVal bool)
 
-        NumberExp n ->
-            Ok (NumberVal n)
+        IntExp n ->
+            Ok (IntVal n)
+
+        FloatExp n ->
+            Ok (FloatVal n)
 
         ListExp list ->
             list

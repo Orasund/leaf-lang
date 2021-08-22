@@ -39,7 +39,7 @@ exp =
         [ Test.test "Constant Exp" <|
             \_ ->
                 "42"
-                    |> expectSuccess (NumberVal (IntNum 42))
+                    |> expectSuccess (IntNum 42)
         , Test.test "String Exp" <|
             \_ ->
                 "\"Hello World\""

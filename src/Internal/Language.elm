@@ -1,7 +1,6 @@
 module Internal.Language exposing
     ( Closure
     , Exp(..)
-    , Number(..)
     , Statement(..)
     , Value(..)
     )
@@ -9,16 +8,12 @@ module Internal.Language exposing
 import Dict exposing (Dict)
 
 
-type Number
-    = IntNum Int
-    | FloatNum Float
-
-
 type Value
     = NullVal
     | StringVal String
     | BoolVal Bool
-    | NumberVal Number
+    | IntVal Int
+    | FloatVal Float
     | ListVal (List Value)
     | ObjectVal (Dict String Value)
     | FunctionVal (Maybe String) Exp
@@ -30,7 +25,8 @@ type Exp
     | NullExp
     | StringExp String
     | BoolExp Bool
-    | NumberExp Number
+    | IntExp Int
+    | FloatExp Float
     | ListExp (List Exp)
     | ObjectExp (Dict String Exp)
     | FunctionExp (Maybe String) Exp

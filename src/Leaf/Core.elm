@@ -1,4 +1,4 @@
-module Leaf.Core exposing (equal, if_, isBool, isExtension, isFloat, isFunction, isInt, isList, isNull, isNumber, isObject, isString, notEqual, package)
+module Leaf.Core exposing (equal, if_, isBool, isExtension, isFloat, isFunction, isInt, isList, isNull, isObject, isString, notEqual, package)
 
 import Dict exposing (Dict)
 import Leaf exposing (Field, Value(..))
@@ -27,11 +27,6 @@ isBool =
 isString : Value -> Bool
 isString =
     Leaf.asString >> internalIsOk
-
-
-isNumber : Value -> Bool
-isNumber =
-    Leaf.asNumber >> internalIsOk
 
 
 isFloat : Value -> Bool
@@ -88,7 +83,6 @@ package =
     [ (isNull >> BoolVal) |> Leaf.unaryFun Leaf.untyped |> Leaf.field "isNull"
     , (isBool >> BoolVal) |> Leaf.unaryFun Leaf.untyped |> Leaf.field "isBool"
     , (isString >> BoolVal) |> Leaf.unaryFun Leaf.untyped |> Leaf.field "isString"
-    , (isNumber >> BoolVal) |> Leaf.unaryFun Leaf.untyped |> Leaf.field "isNumber"
     , (isFloat >> BoolVal) |> Leaf.unaryFun Leaf.untyped |> Leaf.field "isFloat"
     , (isInt >> BoolVal) |> Leaf.unaryFun Leaf.untyped |> Leaf.field "isInt"
     , (isList >> BoolVal) |> Leaf.unaryFun Leaf.untyped |> Leaf.field "isList"

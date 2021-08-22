@@ -4,8 +4,8 @@ import Data.Example exposing (Example)
 import Data.Test.Introduction as Introduction
 import Dict exposing (Dict)
 import ElmBook.Actions as Actions
-import Leaf
-
+import Leaf exposing (Value(..))
+import Leaf.Core as Core
 
 tests : Dict String Example
 tests =
@@ -48,11 +48,22 @@ update msg model =
                         model
 
         OnRun label ->
+            let
+                context =
+                    [ StringVal "World" |> Leaf.field "name"
+                    , (\s2 s1 -> StringVal (s1 ++ s2))
+                        |> Leaf.binaryFun (Leaf.typed Leaf.asString)
+                            (Leaf.typed Leaf.asString)
+                        |> Leaf.field "append"
+                    ]
+                        |> Dict.fromList
+                        |> Dict.union Core.package
+            in
             if label == model.label then
                 { model
                     | result =
                         Just <|
-                            case model.code |> Leaf.run Dict.empty of
+                            case model.code |> Leaf.run context of
                                 Ok ( value, _ ) ->
                                     Leaf.toString value
 
@@ -63,12 +74,13 @@ update msg model =
             else
                 case tests |> Dict.get label of
                     Just example ->
+                        
                         { model
                             | label = label
                             , code = example.code
                             , result =
                                 Just <|
-                                    case example.code |> Leaf.run Dict.empty of
+                                    case example.code |> Leaf.run context of
                                         Ok ( value, _ ) ->
                                             Leaf.toString value
 

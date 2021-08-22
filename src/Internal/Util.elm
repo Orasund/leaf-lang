@@ -1,18 +1,8 @@
-module Internal.Util exposing (deadEndsToString, numToFloat, valueToString)
+module Internal.Util exposing (deadEndsToString, valueToString)
 
 import Dict
-import Internal.Language exposing (Number(..), Value(..))
+import Internal.Language exposing (Value(..))
 import Parser exposing (DeadEnd, Problem(..))
-
-
-numToFloat : Number -> Float
-numToFloat v =
-    case v of
-        IntNum n ->
-            toFloat n
-
-        FloatNum n ->
-            n
 
 
 valueToString : Value -> String
@@ -31,13 +21,11 @@ valueToString value =
             else
                 "false"
 
-        NumberVal number ->
-            case number of
-                IntNum int ->
-                    String.fromInt int
+        IntVal int ->
+            String.fromInt int
 
-                FloatNum float ->
-                    String.fromFloat float
+        FloatVal float ->
+            String.fromFloat float
 
         ListVal list ->
             "["

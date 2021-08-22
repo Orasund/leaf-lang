@@ -1,7 +1,7 @@
-module Internal.Type exposing (Type(..), any, bool, dict, extension, float, function, int, is, list, null, nullable, number, record, string, stringLiteral, union)
+module Internal.Type exposing (Type(..), any, bool, dict, extension, float, function, int, is, list, null, nullable, record, string, stringLiteral, union)
 
 import Dict exposing (Dict)
-import Internal.Language exposing (Exp, Number(..), Value(..))
+import Internal.Language exposing (Exp, Value(..))
 import Internal.Util as Util
 import List
 import Set exposing (Set)
@@ -16,7 +16,6 @@ type Type
     | BoolType
     | IntType
     | FloatType
-    | NumberType
     | ListType Type
     | DictType Type
     | RecordType (Dict String Type)
@@ -85,20 +84,10 @@ bool v =
             Err <| "I expected a boolean but got " ++ Util.valueToString v ++ " instead."
 
 
-number : Value -> Result String Number
-number v =
-    case v of
-        NumberVal a ->
-            Ok <| a
-
-        _ ->
-            Err <| "I expected a number but got " ++ Util.valueToString v ++ " instead."
-
-
 int : Value -> Result String Int
 int v =
     case v of
-        NumberVal (IntNum a) ->
+        IntVal a ->
             Ok <| a
 
         _ ->
@@ -108,7 +97,7 @@ int v =
 float : Value -> Result String Float
 float v =
     case v of
-        NumberVal (FloatNum a) ->
+        FloatVal a ->
             Ok <| a
 
         _ ->
@@ -268,9 +257,6 @@ internalIsNullable t v =
         FloatType ->
             nullable float v |> Result.map (always ())
 
-        NumberType ->
-            nullable number v |> Result.map (always ())
-
         ListType t2 ->
             nullable (internalIsList t2) v |> Result.map (always ())
 
@@ -316,9 +302,6 @@ internalIsList t v =
 
         FloatType ->
             list float v |> Result.map (always ())
-
-        NumberType ->
-            list number v |> Result.map (always ())
 
         ListType t2 ->
             list (internalIsList t2) v |> Result.map (always ())
@@ -366,9 +349,6 @@ internalIsDict t v =
         FloatType ->
             dict float v |> Result.map (always ())
 
-        NumberType ->
-            dict number v |> Result.map (always ())
-
         ListType t2 ->
             dict (internalIsList t2) v |> Result.map (always ())
 
@@ -414,9 +394,6 @@ is t v =
 
         FloatType ->
             float v |> Result.map (always ())
-
-        NumberType ->
-            number v |> Result.map (always ())
 
         ListType t2 ->
             internalIsList t2 v

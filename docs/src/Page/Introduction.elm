@@ -66,9 +66,17 @@ A Hello World script in Leaf is as simple as
 
 <component with-label="HelloWorld" />
 
-In Elm you can evaluate it like this:
+To run this script in Elm you need to call `Leaf.run`.
 
-"""
-        ++ Test.helloWorldString
-        ++ """
+""" ++ Test.helloWorldString ++ """
+The first argument of `Leaf.run` is the "context". 
+You can pass values from Elm to Leaf through the context.
+""" ++ Test.contextSensitiveString ++ """
+Your Leaf script may now use the variable `name` and the extension function `append`.
+
+<component with-label="Append" />
+
+You can use the pipe operator `.` to pass a value from one function to the next.
+
+<component with-label="PipeOp" />
 """

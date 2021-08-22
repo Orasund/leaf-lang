@@ -1,7 +1,7 @@
 module Internal.Syntax exposing (parse)
 
 import Dict exposing (Dict)
-import Internal.Language exposing (Closure, Exp(..), Number(..), Statement(..))
+import Internal.Language exposing (Closure, Exp(..), Statement(..))
 import Internal.Util as Util
 import Parser exposing ((|.), (|=), Nestable(..), Parser, Step(..), Trailing(..))
 import Set
@@ -56,24 +56,24 @@ parseBool =
         ]
 
 
-parseNumber : Parser Number
+parseNumber : Parser Exp
 parseNumber =
     Parser.oneOf
         [ Parser.succeed identity
             |. Parser.symbol "-"
             |= Parser.number
-                { int = Just (negate >> IntNum)
+                { int = Just (negate >> IntExp)
                 , hex = Nothing
                 , octal = Nothing
                 , binary = Nothing
-                , float = Just (negate >> FloatNum)
+                , float = Just (negate >> FloatExp)
                 }
         , Parser.number
-            { int = Just IntNum
+            { int = Just IntExp
             , hex = Nothing
             , octal = Nothing
             , binary = Nothing
-            , float = Just FloatNum
+            , float = Just FloatExp
             }
         ]
 
@@ -231,7 +231,7 @@ singleExp =
         , Parser.keyword "null" |> Parser.map (always NullExp)
         , parseString |> Parser.map StringExp
         , parseBool |> Parser.map BoolExp
-        , parseNumber |> Parser.map NumberExp
+        , parseNumber
         , Parser.lazy (\_ -> parseList) |> Parser.map ListExp
         , Parser.backtrackable <|
             Parser.succeed ClosureExp
@@ -279,13 +279,15 @@ pipeExp e =
         expHelp revList =
             Parser.oneOf
                 [ Parser.succeed (\a -> Loop (a :: revList))
+                    |. Parser.spaces
                     |. Parser.symbol "."
+                    |. Parser.spaces
                     |= (singleExp |> Parser.andThen multiExp)
                 , Parser.succeed (Done (revList |> List.reverse))
                 ]
     in
     Parser.loop [] expHelp
-        |> Parser.map
+        |> Parser.andThen
             (\list ->
                 case list of
                     --"exp . ... . exp"
@@ -293,10 +295,11 @@ pipeExp e =
                         tail
                             |> List.foldl (\next f -> Apply f next)
                                 (Apply e a1)
+                            |> Parser.succeed
 
                     --else
                     [] ->
-                        e
+                        multiExp e
             )
 
 

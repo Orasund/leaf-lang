@@ -12,8 +12,19 @@ import Test exposing (..)
 
 evaluateTest : Example -> Expectation
 evaluateTest example =
+    let
+        context =
+            [ StringVal "World" |> Leaf.field "name"
+            , (\s2 s1 -> StringVal (s1 ++ s2))
+                |> Leaf.binaryFun (Leaf.typed Leaf.asString)
+                    (Leaf.typed Leaf.asString)
+                |> Leaf.field "append"
+            ]
+                |> Dict.fromList
+                |> Dict.union Core.package
+    in
     example.code
-        |> Leaf.run Dict.empty
+        |> Leaf.run context
         |> Result.map Tuple.first
         |> Expect.equal (Ok example.result)
 

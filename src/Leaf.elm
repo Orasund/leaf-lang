@@ -1,8 +1,8 @@
 module Leaf exposing
-    ( Number(..), Exp, Value(..), run
+    ( Exp, Value(..), run
     , Field, field, mutField, unaryFun, binaryFun, trinaryFun
-    , untyped, typed, asNull, asBool, asString, asFloat, asInt, asNumber, asNullable, asAnyList, asList, asObject, asFunction, asExtension
-    , toString, toFloat
+    , untyped, typed, asNull, asBool, asString, asFloat, asInt, asNullable, asAnyList, asList, asObject, asFunction, asExtension
+    , toString
     )
 
 {-| This is the main module for working with Leaf scripts.
@@ -20,7 +20,7 @@ import Leaf exposing (Value(..))
   --> (StringVal "\"Hello World\"",Dict.empty)
 ```
 
-@docs Number, Exp, Value, run
+@docs Exp, Value, run
 
 
 # Context-Sensitive Evaluation
@@ -48,12 +48,12 @@ in
 
 @docs Field, field, mutField, unaryFun, binaryFun, trinaryFun
 
-@docs untyped, typed, asNull, asBool, asString, asFloat, asInt, asNumber, asNullable, asAnyList, asList, asObject, asFunction, asExtension
+@docs untyped, typed, asNull, asBool, asString, asFloat, asInt, asNullable, asAnyList, asList, asObject, asFunction, asExtension
 
 
 # Utility Functions
 
-@docs toString, toFloat
+@docs toString
 
 -}
 
@@ -65,20 +65,14 @@ import Internal.Type as Type
 import Internal.Util as Util
 
 
-{-| Number is a generalization of Int and Flaot
--}
-type Number
-    = IntNum Int
-    | FloatNum Float
-
-
 {-| Every Leaf script evaluates to a Value
 -}
 type Value
     = NullVal
     | StringVal String
     | BoolVal Bool
-    | NumberVal Number
+    | FloatVal Float
+    | IntVal Int
     | ListVal (List Value)
     | ObjectVal (Dict String Value)
     | FunctionVal (Maybe String) Exp
@@ -276,13 +270,6 @@ asFloat =
     internalToValue >> Type.float
 
 
-{-| converts a Leaf number into an Elm number
--}
-asNumber : Value -> Result String Number
-asNumber =
-    internalToValue >> Type.number >> Result.map internalFromNumber
-
-
 {-| converts a Leaf value into an Elm maybe type
 -}
 asNullable : (Value -> Result String a) -> Value -> Result String (Maybe a)
@@ -337,37 +324,10 @@ toString =
     internalToValue >> Util.valueToString
 
 
-{-| converts a number into a float
--}
-toFloat : Number -> Float
-toFloat =
-    internalToNumber >> Util.numToFloat
-
-
 
 --------------------------------------------------------------------------------
 -- INTERNAL
 --------------------------------------------------------------------------------
-
-
-internalToNumber : Number -> Language.Number
-internalToNumber n =
-    case n of
-        IntNum int ->
-            Language.IntNum int
-
-        FloatNum float ->
-            Language.FloatNum float
-
-
-internalFromNumber : Language.Number -> Number
-internalFromNumber n =
-    case n of
-        Language.IntNum int ->
-            IntNum int
-
-        Language.FloatNum float ->
-            FloatNum float
 
 
 internalToValue : Value -> Language.Value
@@ -382,8 +342,11 @@ internalToValue value =
         BoolVal bool ->
             Language.BoolVal bool
 
-        NumberVal number ->
-            Language.NumberVal (internalToNumber number)
+        IntVal number ->
+            Language.IntVal number
+
+        FloatVal number ->
+            Language.FloatVal number
 
         ListVal list ->
             Language.ListVal (list |> List.map internalToValue)
@@ -411,8 +374,11 @@ internalFromValue value =
         Language.BoolVal bool ->
             BoolVal bool
 
-        Language.NumberVal number ->
-            NumberVal (internalFromNumber number)
+        Language.IntVal number ->
+            IntVal number
+
+        Language.FloatVal number ->
+            FloatVal number
 
         Language.ListVal list ->
             ListVal (list |> List.map internalFromValue)

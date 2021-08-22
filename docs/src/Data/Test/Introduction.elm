@@ -1,4 +1,4 @@
-module Data.Test.Introduction exposing (helloWorldString, helloWorldTest, tests)
+module Data.Test.Introduction exposing (contextSensitiveString, helloWorldString, helloWorldTest, tests)
 
 import Data.Example exposing (Example)
 import Dict exposing (Dict)
@@ -14,6 +14,33 @@ tests =
         , result = StringVal "Hello World"
         }
       )
+    , ( "Append"
+      , { code = "append name \"Hello \""
+        , result = StringVal "Hello World"
+        }
+      )
+    , ( "PipeOp"
+      , { code = """\"Hello"
+  .append " "
+  .append "World\""""
+        , result = StringVal "Hello World"
+        }
+      )
+    , ( "LetStatement"
+      , { code = """let hello = "Hello ";
+let world = "World";
+hello.append world"""
+        , result = StringVal "Hello World"
+        }
+      )
+    , ( "MutStatement"
+      , { code = """let hello = "Hello ";
+mut out = "World";
+out = hello.append out;
+out"""
+        , result = StringVal "Hello World"
+        }
+      )
     ]
         |> Dict.fromList
 
@@ -24,6 +51,24 @@ helloWorldString =
     "\\"Hello World\\""
         |> Leaf.run Dict.empty
 """
+
+
+contextSensitiveString : String
+contextSensitiveString =
+    """
+    let
+        context =
+            [ StringVal "World" |> Leaf.field "name"
+            , (\\s2 s1 -> StringVal (s1 ++ s2))
+                |> Leaf.binaryFun (Leaf.typed Leaf.asString)
+                    (Leaf.typed Leaf.asString)
+                |> Leaf.field "append"
+            ]
+                |> Dict.fromList
+    in
+    "\\"Hello \\".append name"
+        |> Leaf.run context
+    """
 
 
 helloWorldTest : Test
@@ -42,11 +87,11 @@ helloWorldTest =
                 let
                     context =
                         [ StringVal "World" |> Leaf.field "name"
-                         , (\s2 s1 -> StringVal (s1 ++ s2))
+                        , (\s2 s1 -> StringVal (s1 ++ s2))
                             |> Leaf.binaryFun (Leaf.typed Leaf.asString)
                                 (Leaf.typed Leaf.asString)
                             |> Leaf.field "append"
-                         ]
+                        ]
                             |> Dict.fromList
                 in
                 "\"Hello \".append name"
@@ -54,6 +99,6 @@ helloWorldTest =
                     |> Result.map Tuple.first
                     |> Expect.equal
                         (Ok <|
-                            ( StringVal "Hello World")
+                            StringVal "Hello World"
                         )
         ]
