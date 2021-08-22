@@ -250,9 +250,10 @@ multiExp e =
         expHelp : List Exp -> Parser (Step (List Exp) (List Exp))
         expHelp revList =
             Parser.oneOf
-                [ Parser.succeed (\a -> Loop (a :: revList))
-                    |. Parser.spaces
-                    |= singleExp
+                [ Parser.backtrackable <|
+                    Parser.succeed (\a -> Loop (a :: revList))
+                        |. Parser.spaces
+                        |= singleExp
                 , Parser.succeed (Done (revList |> List.reverse))
                 ]
     in
@@ -278,11 +279,12 @@ pipeExp e =
         expHelp : List Exp -> Parser (Step (List Exp) (List Exp))
         expHelp revList =
             Parser.oneOf
-                [ Parser.succeed (\a -> Loop (a :: revList))
-                    |. Parser.spaces
-                    |. Parser.symbol "."
-                    |. Parser.spaces
-                    |= (singleExp |> Parser.andThen multiExp)
+                [ Parser.backtrackable <|
+                    Parser.succeed (\a -> Loop (a :: revList))
+                        |. Parser.spaces
+                        |. Parser.symbol "."
+                        |. Parser.spaces
+                        |= (singleExp |> Parser.andThen multiExp)
                 , Parser.succeed (Done (revList |> List.reverse))
                 ]
     in
