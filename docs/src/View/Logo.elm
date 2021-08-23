@@ -1,11 +1,12 @@
 module View.Logo exposing (view)
 
 import Element exposing (Element)
+import Html exposing (Html)
 import Svg
 import Svg.Attributes as Attributes
 
 
-view : Element msg
+view : Html msg
 view =
     let
         size : Float
@@ -87,8 +88,3 @@ view =
             ]
             []
         ]
-        |> Element.html
-        |> Element.el
-            [ Element.height <| Element.px <| round size
-            , Element.width <| Element.shrink --Element.px <| round size
-            ]
