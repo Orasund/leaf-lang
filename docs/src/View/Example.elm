@@ -8,10 +8,8 @@ import Element.Font as Font
 import Element.Input as Input
 import ElmBook exposing (Msg)
 import ElmBook.Actions as Actions
-import Html exposing (Html)
+import Html
 import Html.Attributes as Attributes
-import Html.Events as Events
-import Leaf exposing (Value)
 import SyntaxHighlight
 import View.Palette as Palette
 
@@ -93,6 +91,12 @@ view example =
         , Element.width Element.fill
         , Element.centerX
         , Element.spacing 12
+        , Element.paddingEach
+            { top = 0
+            , right = 0
+            , bottom = 36
+            , left = 0
+            }
         ]
     <|
         input example.code

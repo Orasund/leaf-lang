@@ -26,6 +26,12 @@ tests =
         , result = StringVal "Hello World"
         }
       )
+    , ( "ExtensionFunction"
+        , {code = """\"Hello " 
+  . String::append "World\""""
+            , result = StringVal "Hello World"
+            }
+    )
     , ( "LetStatement"
       , { code = """let hello = "Hello ";
 let world = "World";

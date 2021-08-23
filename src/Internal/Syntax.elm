@@ -7,11 +7,20 @@ import Parser exposing ((|.), (|=), Nestable(..), Parser, Step(..), Trailing(..)
 import Set
 
 
+parseCapVar : Parser String
+parseCapVar =
+    Parser.variable
+        { start = Char.isAlpha
+        , inner = \c -> Char.isAlphaNum c || c == '_' || c == ':'
+        , reserved = Set.fromList [ "let", "mut", "null", "true", "false" ]
+        }
+
+
 parseVariable : Parser String
 parseVariable =
     Parser.variable
         { start = Char.isLower
-        , inner = \c -> Char.isAlphaNum c || c == '_' || c == ':'
+        , inner = \c -> Char.isAlphaNum c || c == '_'
         , reserved = Set.fromList [ "let", "mut", "null", "true", "false" ]
         }
 
@@ -79,10 +88,20 @@ parseString =
 
 comment : Parser ()
 comment =
-    Parser.oneOf
-        [ Parser.lineComment "//"
-        , Parser.multiComment "/*" "*/" Nestable
-        ]
+    Parser.spaces
+        |. Parser.loop ()
+            (\_ ->
+                Parser.oneOf
+                    [ Parser.lineComment "//"
+                        |. Parser.spaces
+                        |> Parser.map Parser.Loop
+                    , Parser.multiComment "/*" "*/" Nestable
+                        |. Parser.spaces
+                        |> Parser.map Parser.Loop
+                    , Parser.succeed ()
+                        |> Parser.map Parser.Done
+                    ]
+            )
 
 
 parseBool : Parser Bool
@@ -261,26 +280,24 @@ roundBracketExp =
 
 singleExp : Parser Exp
 singleExp =
-    Parser.oneOf
-        [ Parser.succeed identity
-            |. comment
-            |= Parser.lazy (\_ -> singleExp)
-        , parseVariable |> Parser.map Variable
-        , Parser.lazy (\_ -> roundBracketExp)
-        , Parser.keyword "null" |> Parser.map (always NullExp)
-        , parseString |> Parser.map StringExp
-        , parseBool |> Parser.map BoolExp
-        , parseNumber
-        , Parser.lazy (\_ -> parseList) |> Parser.map ListExp
-        , Parser.backtrackable <|
-            Parser.succeed ClosureExp
-                |. Parser.symbol "{"
-                |. Parser.spaces
-                |= Parser.lazy (\_ -> parseClosure)
-                |. Parser.spaces
-                |. Parser.symbol "}"
-        , Parser.lazy (\_ -> parseObject) |> Parser.map ObjectExp
-        ]
+    Parser.succeed identity
+        |= Parser.oneOf
+            [ parseCapVar |> Parser.map Variable
+            , Parser.lazy (\_ -> roundBracketExp)
+            , Parser.keyword "null" |> Parser.map (always NullExp)
+            , parseString |> Parser.map StringExp
+            , parseBool |> Parser.map BoolExp
+            , parseNumber
+            , Parser.lazy (\_ -> parseList) |> Parser.map ListExp
+            , Parser.backtrackable <|
+                Parser.succeed ClosureExp
+                    |. Parser.symbol "{"
+                    |. Parser.spaces
+                    |= Parser.lazy (\_ -> parseClosure)
+                    |. Parser.spaces
+                    |. Parser.symbol "}"
+            , Parser.lazy (\_ -> parseObject) |> Parser.map ObjectExp
+            ]
 
 
 multiExp : Exp -> Parser Exp
@@ -354,10 +371,7 @@ parseExp =
 parseStatement : Parser Statement
 parseStatement =
     Parser.oneOf
-        [ Parser.succeed identity
-            |. comment
-            |= Parser.lazy (\_ -> parseStatement)
-        , Parser.succeed Let
+        [ Parser.succeed Let
             |. Parser.keyword "let"
             |. Parser.spaces
             |= parseVariable
@@ -388,7 +402,9 @@ parseClosure =
         statementsHelp : List Statement -> Parser (Step (List Statement) Closure)
         statementsHelp revStmts =
             Parser.oneOf
-                [ Parser.backtrackable <|
+                [ Parser.succeed (Loop revStmts)
+                    |. comment
+                , Parser.backtrackable <|
                     Parser.succeed (\stmt -> Loop (stmt :: revStmts))
                         |= parseStatement
                         |. Parser.spaces

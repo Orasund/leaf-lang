@@ -1,15 +1,17 @@
 module Main exposing (main)
 
-import Data.Shared as Shared exposing (Model, Msg)
+import Data.Shared as Shared exposing (Model)
 import Element exposing (Element)
 import ElmBook
 import ElmBook.ComponentOptions as ComponentOptions
-import ElmBook.ElmUI as ElmBookUI exposing (Book)
+import ElmBook.Custom
+import ElmBook.ElmUI exposing (Book)
 import ElmBook.StatefulOptions as StatefulOptions
 import ElmBook.ThemeOptions as ThemeOptions
-import Html exposing (Html)
+import Html
 import Html.Attributes as Attributes
 import Page.Introduction
+import Page.Statements
 import View.Logo as Logo
 import View.Palette as Palette
 
@@ -33,7 +35,7 @@ header =
 
 main : Book Model
 main =
-    ElmBookUI.book "Leaf"
+    ElmBook.Custom.customBook (Element.layout []) "Leaf"
         |> ElmBook.withStatefulOptions
             [ StatefulOptions.initialState Shared.init
             ]
@@ -53,4 +55,5 @@ main =
             [ ComponentOptions.displayInline ]
         |> ElmBook.withChapters
             [ Page.Introduction.chapter
+            , Page.Statements.chapter
             ]
