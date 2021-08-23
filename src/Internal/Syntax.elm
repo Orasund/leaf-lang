@@ -16,25 +16,64 @@ parseVariable =
         }
 
 
+{-| -}
+stringHelper : Char -> Parser String
+stringHelper quoteChar =
+    let
+        quoteString =
+            String.fromChar quoteChar
+
+        isNotEndOrEscape c =
+            c /= quoteChar && c /= '\\'
+    in
+    Parser.succeed identity
+        |. Parser.symbol quoteString
+        |= Parser.loop []
+            (\chunks ->
+                Parser.oneOf
+                    [ Parser.succeed (\chunk -> chunk :: chunks)
+                        |= stringEscapeHelper [ quoteString ]
+                        |> Parser.map Parser.Loop
+                    , Parser.succeed (List.reverse chunks |> String.join "")
+                        |. Parser.token quoteString
+                        |> Parser.map Parser.Done
+                    , Parser.getChompedString (Parser.chompWhile isNotEndOrEscape)
+                        |> Parser.andThen
+                            (\s ->
+                                if s == "" then
+                                    Parser.problem ""
+
+                                else
+                                    Parser.succeed (s :: chunks)
+                            )
+                        |> Parser.map Parser.Loop
+                    ]
+            )
+
+
+stringEscapeHelper : List String -> Parser String
+stringEscapeHelper escapeChars =
+    let
+        mapString s =
+            Parser.succeed s |. Parser.token s
+    in
+    Parser.succeed identity
+        |. Parser.token "\\"
+        |= Parser.oneOf
+            (List.map mapString escapeChars
+                ++ [ Parser.succeed "\n" |. Parser.token "n"
+                   , Parser.succeed "\t" |. Parser.token "t"
+                   , Parser.succeed "\u{000D}" |. Parser.token "r"
+                   , Parser.succeed "\\" |. Parser.token "\\"
+                   ]
+            )
+
+
 parseString : Parser String
 parseString =
     Parser.oneOf
-        [ Parser.succeed identity
-            |. Parser.symbol "\""
-            |= Parser.variable
-                { start = (/=) '"'
-                , inner = (/=) '"'
-                , reserved = Set.empty
-                }
-            |. Parser.symbol "\""
-        , Parser.succeed identity
-            |. Parser.symbol "'"
-            |= Parser.variable
-                { start = (==) '\''
-                , inner = (/=) '\''
-                , reserved = Set.empty
-                }
-            |. Parser.symbol "'"
+        [ stringHelper '"'
+        , stringHelper '\''
         ]
 
 

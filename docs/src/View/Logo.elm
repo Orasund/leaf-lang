@@ -90,5 +90,5 @@ view =
         |> Element.html
         |> Element.el
             [ Element.height <| Element.px <| round size
-            , Element.width <| Element.px <| round size
+            , Element.width <| Element.shrink --Element.px <| round size
             ]

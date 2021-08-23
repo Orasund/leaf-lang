@@ -1,14 +1,15 @@
 module Main exposing (main)
 
 import Data.Shared as Shared exposing (Model, Msg)
-import ElmBook 
+import ElmBook
 import ElmBook.ComponentOptions as ComponentOptions
+import ElmBook.ElmUI as ElmBookUI exposing (Book)
 import ElmBook.StatefulOptions as StatefulOptions
 import ElmBook.ThemeOptions as ThemeOptions
 import Page.Introduction
 import View.Logo as Logo
 import View.Palette as Palette
-import ElmBook.ElmUI as ElmBookUI exposing (Book)
+
 
 main : Book Model
 main =
