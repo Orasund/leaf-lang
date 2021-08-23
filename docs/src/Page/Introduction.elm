@@ -3,9 +3,11 @@ module Page.Introduction exposing (chapter)
 import Data.Shared as Shared exposing (Model)
 import Data.Test.Introduction as Test
 import Dict
+import Element exposing (Element)
 import ElmBook exposing (Msg)
 import ElmBook.Actions as Actions
-import ElmBook.Chapter as Chapter exposing (Chapter)
+import ElmBook.Chapter as Chapter
+import ElmBook.ElmUI as ElmBookUI exposing (Chapter)
 import Html exposing (Html)
 import Leaf
 import View.Example as Example
@@ -14,7 +16,7 @@ import View.Example as Example
 chapter : Chapter Model
 chapter =
     let
-        compoentList : List ( String, Model -> Html (Msg Model) )
+        compoentList : List ( String, Model -> Element (Msg Model) )
         compoentList =
             Test.tests
                 |> Dict.toList
@@ -79,4 +81,9 @@ Your Leaf script may now use the variable `name` and the extension function `app
 You can use the pipe operator `.` to pass a value from one function to the next.
 
 <component with-label="PipeOp" />
+
+Leaf provides you with a core library (Leaf.Core) containing the most essential functions (if, equal, isString and so on).
+Any type specific functions, like the `append` function, must be implemented by yourself.
+This has practical reasons: Maintaining a language and libraries for it is a lot of work. 
+It's therefore better to split these more specific functions off into their own projects.
 """

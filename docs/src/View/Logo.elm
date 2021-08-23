@@ -1,5 +1,6 @@
 module View.Logo exposing (view)
 
+import Element exposing (Element)
 import Html exposing (Html)
 import Svg
 import Svg.Attributes as Attributes
