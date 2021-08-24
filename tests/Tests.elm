@@ -2,7 +2,7 @@ module Tests exposing (..)
 
 import Dict
 import Expect exposing (Expectation)
-import Internal.Language exposing (Exp(..), Number(..), Value(..))
+import Internal.Language exposing (Exp(..), Value(..))
 import Internal.Semantics as Semantics
 import Internal.Syntax as Syntax
 import Leaf.Core as Core

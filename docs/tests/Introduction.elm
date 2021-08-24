@@ -24,7 +24,7 @@ helloWorldTest =
 
 suite : Test
 suite =
-    T.tests
+    Test.tests
         |> Dict.toList
         |> List.map
             (\( name, example ) ->

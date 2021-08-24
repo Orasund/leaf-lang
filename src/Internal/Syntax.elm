@@ -281,6 +281,7 @@ roundBracketExp =
 singleExp : Parser Exp
 singleExp =
     Parser.succeed identity
+        |. comment
         |= Parser.oneOf
             [ parseCapVar |> Parser.map Variable
             , Parser.lazy (\_ -> roundBracketExp)
@@ -401,24 +402,24 @@ parseClosure =
     let
         statementsHelp : List Statement -> Parser (Step (List Statement) Closure)
         statementsHelp revStmts =
-            Parser.oneOf
-                [ Parser.succeed (Loop revStmts)
-                    |. comment
-                , Parser.backtrackable <|
-                    Parser.succeed (\stmt -> Loop (stmt :: revStmts))
-                        |= parseStatement
-                        |. Parser.spaces
-                        |. Parser.symbol ";"
-                        |. Parser.spaces
-                , parseExp
-                    |> Parser.map
-                        (\exp ->
-                            Done
-                                { statements = List.reverse revStmts
-                                , return = exp
-                                }
-                        )
-                ]
+            Parser.succeed identity
+                |. comment
+                |= Parser.oneOf
+                    [ Parser.backtrackable <|
+                        Parser.succeed (\stmt -> Loop (stmt :: revStmts))
+                            |= parseStatement
+                            |. Parser.spaces
+                            |. Parser.symbol ";"
+                            |. Parser.spaces
+                    , parseExp
+                        |> Parser.map
+                            (\exp ->
+                                Done
+                                    { statements = List.reverse revStmts
+                                    , return = exp
+                                    }
+                            )
+                    ]
     in
     Parser.loop [] statementsHelp
 
