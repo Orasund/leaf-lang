@@ -25,7 +25,7 @@ if (isNull value)
   "You can't append null"
   ("Hello ".append value)
 """
-        , result = BoolVal True
+        , result = StringVal "Hello edit me"
         }
       )
     , ( "TrueValue"
@@ -49,7 +49,7 @@ let error =
     "Error: String expected"
     null;
 out"""
-        , result = BoolVal True
+        , result = StringVal "Hello World"
         }
       )
     , ( "IntValue"
@@ -73,14 +73,14 @@ out"""
     )
   ]
 ]"""
-        , result = BoolVal True
+        , result = ListVal [BoolVal True,ListVal [IntVal 1,StringVal "Hello World",BoolVal True,FloatVal 42]]
         }
       )
     , ( "ObjValue"
       , { code = """{ helloWorld : null,
   favoriteNumber : 42
 }"""
-        , result = BoolVal True
+        , result = ObjectVal (Dict.fromList [("favoriteNumber",IntVal 42),("helloWorld",NullVal)])
         }
       )
     , ( "EmptyObj"
@@ -95,10 +95,10 @@ out"""
         }
       )
     , ( "MutFunValue"
-      , { code = """mut a = fun string -> "Hello".append string;
-let a = "World";
-a"""
-        , result = BoolVal True
+      , { code = """mut out = fun a b -> append a b;
+set out = "Hello World";
+out"""
+        , result = StringVal "Hello World"
         }
       )
     , ( "CurryFun"

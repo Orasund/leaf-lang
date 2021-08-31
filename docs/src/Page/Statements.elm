@@ -20,10 +20,11 @@ chapter =
 introduction : String
 introduction =
     """
-A Leaf script is composed out of a list of statements, followed by an expression.
 All examples up until now where expressions. So we will now look into statements.
 
-![Syntax for Blocks](https://orasund.github.io/leaf-lang/syntax/block.svg)
+### Statement
+
+![Syntax for Statement](https://orasund.github.io/leaf-lang/syntax/statement.svg)
 """
 
 letContent : String

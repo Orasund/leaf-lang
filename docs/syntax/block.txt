@@ -1,0 +1,12 @@
+Diagram(
+  ZeroOrMore(
+    Sequence(
+      Optional(NonTerminal('Comment'),"skip"),
+      NonTerminal('Statement'),
+      Optional(NonTerminal('Spaces'),"skip"),
+      Terminal(';'),
+      Optional(NonTerminal('Spaces'),"skip"),
+    )
+  ),
+  NonTerminal('Expression')
+)

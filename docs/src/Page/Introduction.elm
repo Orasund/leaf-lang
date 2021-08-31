@@ -26,7 +26,18 @@ Leaf is
 * extendable (by normal Elm functions)
 * based on Lua with a few features taken from Rust
 * context sensitive (similar to Ports in Elm)
-* small (50KB of pure Elm code)"""
+* small (50KB of pure Elm code)
+
+A Leaf block is composed out of a list of statements, followed by an expression.
+
+### Block
+
+![Syntax for Blocks](https://orasund.github.io/leaf-lang/syntax/block.svg)
+
+### Spaces
+
+![Syntax for Spaces](https://orasund.github.io/leaf-lang/syntax/spaces.svg)
+"""
 
 helloWorld : String
 helloWorld =

@@ -1,0 +1,9 @@
+Diagram(
+  OneOrMore(
+    Choice(1,
+      Terminal('\\n'),
+      Terminal(' '),
+      Terminal('\\r'),
+    )
+  )
+)

@@ -1,0 +1,7 @@
+Diagram(
+  Choice(1,
+      NonTerminal('Let'),
+      NonTerminal('Mut'),
+      NonTerminal('Set'),
+  )
+)

@@ -1,0 +1,24 @@
+Diagram(
+  OneOrMore(
+  OneOrMore(
+    Choice(8,
+      NonTerminal("Variable"),
+      NonTerminal("Null"),
+      NonTerminal("String"),
+      NonTerminal("Boolean"),
+      NonTerminal("Int"),
+      NonTerminal("Float"),
+      NonTerminal("List"),
+      NonTerminal("Object"),
+      Sequence(
+        Terminal("("),
+        Optional(NonTerminal("Spaces"),"skip"),
+        NonTerminal("Block"),
+        Optional(NonTerminal("Spaces"),"skip"),
+        ")"),
+    ),
+    NonTerminal("Spaces")
+  ),
+  NonTerminal(".")  
+  )
+)

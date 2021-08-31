@@ -8,7 +8,7 @@ import View.Chapter as Chapter
 
 chapter : ( String, List (Chapter Model) )
 chapter =
-    ( "Values"
+    ( "Expressions"
     , [ Chapter.view "Introduction" introduction
       , Chapter.view "Null" null
       , Chapter.view "Bool" bool
@@ -27,7 +27,12 @@ introduction =
     """
 Leaf is dynamically typed (just like JavaScript), this means values have types, but variables don't.
 
-<component with-label="DynamicallyTyped" />"""
+<component with-label="DynamicallyTyped" />
+
+### Expression
+
+![Syntax for Expressions](https://orasund.github.io/leaf-lang/syntax/expression.svg)
+"""
 
 null : String
 null =

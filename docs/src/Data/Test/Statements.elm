@@ -54,7 +54,7 @@ hello.append "World" """
       )
     , ( "BlockUnmutable"
       , { code = """mut out = (let temp = "Hello "; temp);
-set out = (let temp = "World "; out.append temp);
+set out = (let temp = "World"; out.append temp);
 out"""
         , result = StringVal "Hello World"
         }
