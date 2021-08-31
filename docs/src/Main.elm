@@ -33,7 +33,6 @@ header =
         ]
         |> Element.html
 
-
 main : Book Model
 main =
     ElmBook.Custom.customBook (Element.layout []) "Leaf"

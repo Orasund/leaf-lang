@@ -109,14 +109,3 @@ view example =
                     |> Maybe.withDefault []
                )
 
-
-
-{--:: (example.result
-                    |> Maybe.map
-                        (\result ->
-                            [ Html.br [] []
-                            , result |> code
-                            ]
-                        )
-                    |> Maybe.withDefault []
-               )--}

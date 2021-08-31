@@ -21,7 +21,10 @@ introduction : String
 introduction =
     """
 A Leaf script is composed out of a list of statements, followed by an expression.
-All examples up until now where expressions. So we will now look into statements."""
+All examples up until now where expressions. So we will now look into statements.
+
+![Syntax for Blocks](https://orasund.github.io/leaf-lang/syntax/block.svg)
+"""
 
 letContent : String
 letContent =
