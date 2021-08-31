@@ -50,7 +50,10 @@ You can use null similar to `Nothing`.
 <component with-label="NullableValue" />
 
 In our definition of append we have specified that we only allow strings. So if we try appending null, we get a runtime error.
-"""
+
+### Null
+
+![Syntax for Null](https://orasund.github.io/leaf-lang/syntax/null.svg)"""
 
 bool : String
 bool =
@@ -58,7 +61,11 @@ bool =
 
 <component with-label="TrueValue" />
 
-<component with-label="FalseValue" />"""
+<component with-label="FalseValue" />
+
+### Boolean
+
+![Syntax for Booleans](https://orasund.github.io/leaf-lang/syntax/bool.svg)"""
 
 string : String
 string =
@@ -99,7 +106,10 @@ list =
 <component with-label="ListValue" />
 
 Lists do no allow a random access, so therefore it takes linear time to get or update an entry.
-"""
+
+### List
+
+![Syntax for Lists](https://orasund.github.io/leaf-lang/syntax/list.svg)"""
 
 object : String
 object =
@@ -109,7 +119,11 @@ object =
 
 `{}` is the empty object, note that it looks like a block without content.
 
-<component with-label="EmptyObj" />"""
+<component with-label="EmptyObj" />
+
+### Object
+
+![Syntax for objects](https://orasund.github.io/leaf-lang/syntax/object.svg)"""
 
 function : String
 function =
@@ -123,7 +137,12 @@ The function may be mutable. In this case the function can be overwritten by ano
 
 Function are curried so you can partially apply a function this also works for extension functions.
 
-<component with-label="CurryFun" />"""
+<component with-label="CurryFun" />
+
+### Function
+
+![Syntax for Functions](https://orasund.github.io/leaf-lang/syntax/function.svg)"""
+"""
 
 extensionFunctions : String
 extensionFunctions =

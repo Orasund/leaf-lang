@@ -1,0 +1,10 @@
+Diagram(
+  "fun",
+  NonTerminal("spaces"),
+  OneOrMore(
+    Sequence(NonTerminal("Variable"),NonTerminal("spaces")),
+  ),
+  "->",
+  Optional(NonTerminal("spaces")),
+  NonTerminal("Expression")
+)

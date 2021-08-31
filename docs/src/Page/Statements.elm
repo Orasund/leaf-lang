@@ -66,15 +66,15 @@ comments =
 
 ### Comment
 
-![Syntax for Set](https://orasund.github.io/leaf-lang/syntax/comment.svg)
+![Syntax for Comment](https://orasund.github.io/leaf-lang/syntax/comment.svg)
 
 ### SingleLineComment
 
-![Syntax for Set](https://orasund.github.io/leaf-lang/syntax/singleLineComment.svg)
+![Syntax for Single Line Comment](https://orasund.github.io/leaf-lang/syntax/singleLineComment.svg)
 
 ### MultiLineComment
 
-![Syntax for Set](https://orasund.github.io/leaf-lang/syntax/multiLineComment.svg)"""
+![Syntax for Multi Line Comment](https://orasund.github.io/leaf-lang/syntax/multiLineComment.svg)"""
 
 blocks : String
 blocks =

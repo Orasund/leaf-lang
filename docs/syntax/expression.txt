@@ -1,6 +1,7 @@
 Diagram(
   OneOrMore(
   OneOrMore(
+    Sequence(Optional(NonTerminal("Comment"),"skip"),
     Choice(1,
       NonTerminal("Variable"),
       NonTerminal("Constructor"),
@@ -10,9 +11,13 @@ Diagram(
         NonTerminal("Block"),
         Optional(NonTerminal("Spaces"),"skip"),
         ")"),
-    ),
+    )),
     NonTerminal("Spaces")
   ),
-  NonTerminal(".")  
+  Sequence(
+    Optional(NonTerminal("Spaces"),"skip"),
+    NonTerminal("."),
+    Optional(NonTerminal("Spaces"),"skip"),
+  )
   )
 )

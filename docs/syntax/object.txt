@@ -1,0 +1,14 @@
+Diagram(
+  "{",
+  Optional("Spaces","skip"),
+  ZeroOrMore(
+    Sequence(
+      NonTerminal("Variable"),
+      Optional("Spaces","skip"),
+      ":",
+      Optional("Spaces","skip"),
+      NonTerminal("Expression")
+    ),Sequence(Optional("Spaces","skip"),",",Optional("Spaces","skip"))),
+  Optional("Spaces","skip"),
+  "}"
+)

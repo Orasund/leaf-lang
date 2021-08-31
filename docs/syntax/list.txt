@@ -1,0 +1,7 @@
+Diagram(
+  "[",
+  Optional("Spaces","skip"),
+  ZeroOrMore(NonTerminal("Expression"),""),
+  Optional("Spaces","skip"),
+  "]"
+)
