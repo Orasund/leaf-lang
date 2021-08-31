@@ -12,6 +12,7 @@ import Html
 import Html.Attributes as Attributes
 import Page.Introduction
 import Page.Statements
+import Page.Types
 import View.Logo as Logo
 import View.Palette as Palette
 
@@ -53,7 +54,8 @@ main =
             ]
         |> ElmBook.withComponentOptions
             [ ComponentOptions.displayInline ]
-        |> ElmBook.withChapters
+        |> ElmBook.withChapterGroups
             [ Page.Introduction.chapter
             , Page.Statements.chapter
+            , Page.Types.chapter
             ]

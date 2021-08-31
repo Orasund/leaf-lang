@@ -3,6 +3,7 @@ module Data.Test exposing (context, tests)
 import Data.Example exposing (Example)
 import Data.Test.Introduction as Introduction
 import Data.Test.Statements as Statements
+import Data.Test.Types as Types
 import Dict exposing (Dict)
 import Leaf exposing (Field, Value(..))
 import Leaf.Core as Core
@@ -12,6 +13,7 @@ tests : Dict String Example
 tests =
     Introduction.tests
         |> Dict.union Statements.tests
+        |> Dict.union Types.tests
 
 
 context : Dict String Field

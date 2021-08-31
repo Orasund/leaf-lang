@@ -17,7 +17,7 @@ hello.append world"""
     , ( "MutExample"
       , { code = """let hello = "Hello ";
 mut out = "World";
-out = hello.append out;
+set out = hello.append out;
 out"""
         , result = StringVal "Hello World"
         }
@@ -30,6 +30,32 @@ let hello =
 /* This a multi line comment
 /* It may even have nested comment */*/
 hello.append "World" """
+        , result = StringVal "Hello World"
+        }
+      )
+    , ( "BlockBasic"
+      , { code = """let hello = "Hello ";
+( mut out = "World";
+  set out = hello.append out;
+  out
+)"""
+        , result = StringVal "Hello World"
+        }
+      )
+    , ( "BlockAdvanced"
+      , { code = """( let out =
+    ( let hello = ( "Hello " );
+      hello.append "World"
+    );
+  out
+)"""
+        , result = StringVal "Hello World"
+        }
+      )
+    , ( "BlockUnmutable"
+      , { code = """mut out = (let temp = "Hello "; temp);
+set out = (let temp = "World "; out.append temp);
+out"""
         , result = StringVal "Hello World"
         }
       )

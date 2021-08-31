@@ -7,16 +7,18 @@ import ElmBook.ElmUI exposing (Chapter)
 import View.Chapter as Chapter
 
 
-chapter : Chapter Model
+chapter : ( String, List (Chapter Model) )
 chapter =
-    content
-        |> Chapter.view "Introduction"
+    ( "Basics"
+    , [ Chapter.view "Introduction" introduction
+        , Chapter.view "Hello World" helloWorld
+        , Chapter.view "Extension Functions" extensionFunctions
+      ]
+    )
 
-
-content : String
-content =
+introduction : String
+introduction =
     """
-
 Leaf is a multi paradigm scripting language for Elm. It is designed to be extendable to fit your needs.
 
 Leaf is
@@ -24,9 +26,11 @@ Leaf is
 * extendable (by normal Elm functions)
 * based on Lua with a few features taken from Rust
 * context sensitive (similar to Ports in Elm)
-* small (50KB of pure Elm code)
+* small (50KB of pure Elm code)"""
 
-## Hello World
+helloWorld : String
+helloWorld =
+    """
 
 A Hello World script in Leaf is as simple as
 
@@ -44,9 +48,11 @@ Your Leaf script may now use the variable `name` and the extension function `app
 
 You can use the pipe operator `.` to pass a value from one function to the next.
 
-<component with-label="PipeOp" />
+<component with-label="PipeOp" />"""
 
-## Extension Functions
+extensionFunctions : String
+extensionFunctions =
+    """
 
 "Vanilla" Leaf  does not come with any predefined functions. We suggest to always include at least the `Leaf.Core` package. This package contains the most essential functions: `equal`, `if`, `isBool`, `isExtension`, `isFloat`, `isFunction`, `isInt`, `isList`, `isNull`, `isObject`, `isString` and `notEqual`. 
 
@@ -54,9 +60,17 @@ Any type specific functions, like the `append` function, must be implemented by 
 This has practical reasons: Maintaining a language and libraries for it is a lot of work. 
 It's therefore better to split these more specific functions off into their own projects.
 
-Extension functions may start with an uppercase letter and have the character `:` in the name. 
+Extension functions may start with either
+* Uppercase letter (`A,B,C,...`)
+* Lowercase letter (`a,b,c,...`)
+
+followed by 
+
+* Letters (`A,a,B,b,C,c,...`)
+* Numerals (`0,1,2,3,...`)
+* Underscore (`_`) and
+* Collon (`:`)
+
 This way we can allow the naming convention `Package::functionName`. 
 
-<component with-label="ExtensionFunction" />
-
-"""
+<component with-label="ExtensionFunction" />"""

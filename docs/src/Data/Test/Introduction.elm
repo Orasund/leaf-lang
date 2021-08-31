@@ -2,7 +2,7 @@ module Data.Test.Introduction exposing (contextSensitiveString, helloWorldString
 
 import Data.Example exposing (Example)
 import Dict exposing (Dict)
-import Expect exposing (Expectation)
+import Expect
 import Leaf exposing (Value(..))
 import Test exposing (..)
 
@@ -20,18 +20,18 @@ tests =
         }
       )
     , ( "PipeOp"
-      , { code = """\"Hello"
+      , { code = """"Hello"
   .append " "
   .append "World\""""
         , result = StringVal "Hello World"
         }
       )
     , ( "ExtensionFunction"
-        , {code = """\"Hello " 
+      , { code = """"Hello " 
   . String::append "World\""""
-            , result = StringVal "Hello World"
-            }
-    )
+        , result = StringVal "Hello World"
+        }
+      )
     , ( "LetStatement"
       , { code = """let hello = "Hello ";
 let world = "World";
@@ -42,7 +42,7 @@ hello.append world"""
     , ( "MutStatement"
       , { code = """let hello = "Hello ";
 mut out = "World";
-out = hello.append out;
+set out = hello.append out;
 out"""
         , result = StringVal "Hello World"
         }
