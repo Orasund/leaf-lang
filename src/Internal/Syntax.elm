@@ -318,7 +318,7 @@ parseStatement =
     Parser.oneOf
         [ Parser.succeed Let
             |. Parser.keyword "let"
-            |. Parser.spaces
+            |. internalOneOrMoreSpaces
             |= parseVariable
             |. Parser.spaces
             |. Parser.symbol "="
@@ -326,7 +326,7 @@ parseStatement =
             |= parseExp
         , Parser.succeed Mut
             |. Parser.keyword "mut"
-            |. Parser.spaces
+            |. internalOneOrMoreSpaces
             |= parseVariable
             |. Parser.spaces
             |. Parser.symbol "="
@@ -334,7 +334,7 @@ parseStatement =
             |= parseExp
         , Parser.succeed Set
             |. Parser.keyword "set"
-            |. Parser.spaces
+            |. internalOneOrMoreSpaces
             |= parseVariable
             |. Parser.spaces
             |. Parser.symbol "="

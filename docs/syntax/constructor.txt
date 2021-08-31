@@ -1,0 +1,13 @@
+Diagram(
+  Choice(4,
+      NonTerminal("Null"),
+      NonTerminal("String"),
+      NonTerminal("Boolean"),
+      NonTerminal("Int"),
+      NonTerminal("Float"),
+      NonTerminal("List"),
+      NonTerminal("Object"),
+      NonTerminal("Function"),
+      NonTerminal("Extension"),
+  )
+)

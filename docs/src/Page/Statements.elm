@@ -37,7 +37,11 @@ The keyword `let` specifies a constant value. Same as in Elm, this value can not
 The variable must start with an lowercase letter (`a,b,c`) followed by
 * Letters (`A,a,B,b,C,c,...`)
 * Numerals (`0,1,2,3,...`)
-* Underscore (`_`)"""
+* Underscore (`_`)
+
+### Let
+
+![Syntax for Let](https://orasund.github.io/leaf-lang/syntax/let.svg)"""
 
 mutContent : String
 mutContent =
@@ -45,18 +49,37 @@ mutContent =
 The keyword `mut` specifies a value that can be change using `set`.
 
 <component with-label="MutExample" />
-"""
+
+### Mut
+
+![Syntax for Mut](https://orasund.github.io/leaf-lang/syntax/mut.svg)
+
+### Set
+
+![Syntax for Set](https://orasund.github.io/leaf-lang/syntax/set.svg)"""
 
 comments : String
 comments =
     """Leaf supports both single- and multi-line comments.
 
-<component with-label="Comments" />"""
+<component with-label="Comments" />
+
+### Comment
+
+![Syntax for Set](https://orasund.github.io/leaf-lang/syntax/comment.svg)
+
+### SingleLineComment
+
+![Syntax for Set](https://orasund.github.io/leaf-lang/syntax/singleLineComment.svg)
+
+### MultiLineComment
+
+![Syntax for Set](https://orasund.github.io/leaf-lang/syntax/multiLineComment.svg)"""
 
 blocks : String
 blocks =
     """
-You can turn a group of statements into a statement using blocks. Just like a Leaf script, bocks consist of statements followed by a single expression (the return value).
+You can turn group of statements into a statement using blocks. Bocks consist of statements followed by a single expression (the return value).
 
 <component with-label="BlockBasic" />
 

@@ -1,0 +1,6 @@
+Diagram(
+  OneOrMore(Choice(1,NonTerminal("SingleLineComment"),
+    NonTerminal("MultiLineComment")
+    )
+  )
+)

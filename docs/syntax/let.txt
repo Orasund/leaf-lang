@@ -1,0 +1,9 @@
+Diagram(
+  Terminal("let"),
+  NonTerminal("Spaces"),
+  NonTerminal("Variable"),
+  Optional(NonTerminal("Spaces")),
+  Terminal("="),
+  Optional(NonTerminal("Spaces")),
+  NonTerminal("Expression")
+)

@@ -1,0 +1,7 @@
+Diagram(
+  Terminal("\\*"),
+  NonTerminal('String not containing "\\*" or "*\\"'),
+  Optional(NonTerminal("MultiLineComment"),"skip"),
+  NonTerminal('String not containing "\\*" or "*\\"'),
+  Terminal("*\\"),
+)

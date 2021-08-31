@@ -32,6 +32,10 @@ Leaf is dynamically typed (just like JavaScript), this means values have types, 
 ### Expression
 
 ![Syntax for Expressions](https://orasund.github.io/leaf-lang/syntax/expression.svg)
+
+### Constructor
+
+![Syntax for Expressions](https://orasund.github.io/leaf-lang/syntax/constructor.svg)
 """
 
 null : String
