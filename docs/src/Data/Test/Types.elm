@@ -23,7 +23,7 @@ out"""
       , { code = """let value = "edit me";
 if (isNull value)
   "You can't append null"
-  ("Hello ".append value)
+  ("Hello " .append value)
 """
         , result = StringVal "Hello edit me"
         }
@@ -41,11 +41,11 @@ if (isNull value)
     , ( "StringValue"
       , { code = """mut out = "Hello World";
 set out = 
-  if (out.isString)
+  if (out .isString)
     out
     null;
 let error =
-  if (out.isNull)
+  if (out .isNull)
     "Error: String expected"
     null;
 out"""
@@ -54,17 +54,17 @@ out"""
       )
     , ( "IntValue"
       , { code = """//Note that we need to use brackets here
-(42).isInt"""
+42 .isInt"""
         , result = BoolVal True
         }
       )
     , ( "FloatValue"
-      , { code = """42.0.isFloat"""
+      , { code = """42.0 .isFloat"""
         , result = BoolVal True
         }
       )
     , ( "ListValue"
-      , { code = """[ [].isList,
+      , { code = """[ [] .isList,
   [ 1,
     "Hello World",
     isNull null,
@@ -84,12 +84,12 @@ out"""
         }
       )
     , ( "EmptyObj"
-      , { code = """{}.isObject"""
+      , { code = """{} .isObject"""
         , result = BoolVal True
         }
       )
     , ( "FunctionValue"
-      , { code = """(fun hello world -> hello.append world) "Hello" \"World\"
+      , { code = """(fun hello world -> hello .append world) "Hello" \"World\"
   .isFunction"""
         , result = BoolVal True
         }
@@ -103,12 +103,12 @@ out"""
       )
     , ( "CurryFun"
       , { code = """mut appendTo = fun a b -> append a b;
-(appendTo "World").isFunction"""
+(appendTo "World") .isFunction"""
         , result = BoolVal True
         }
       )
     , ( "ExtensionValue"
-      , { code = """append.isExtension"""
+      , { code = """append .isExtension"""
         , result = BoolVal True
         }
       )

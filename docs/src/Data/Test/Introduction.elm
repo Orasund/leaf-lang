@@ -35,14 +35,14 @@ tests =
     , ( "LetStatement"
       , { code = """let hello = "Hello ";
 let world = "World";
-hello.append world"""
+hello .append world"""
         , result = StringVal "Hello World"
         }
       )
     , ( "MutStatement"
       , { code = """let hello = "Hello ";
 mut out = "World";
-set out = hello.append out;
+set out = hello .append out;
 out"""
         , result = StringVal "Hello World"
         }
@@ -100,7 +100,7 @@ helloWorldTest =
                         ]
                             |> Dict.fromList
                 in
-                "\"Hello \".append name"
+                "\"Hello \" .append name"
                     |> Leaf.run context
                     |> Result.map Tuple.first
                     |> Expect.equal

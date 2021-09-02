@@ -2,8 +2,9 @@ Diagram(
   OneOrMore(
   OneOrMore(
     Sequence(Optional(NonTerminal("Comment"),"skip"),
-    Choice(1,
+    Choice(2,
       NonTerminal("Variable"),
+      NonTerminal("InputVariable"),
       NonTerminal("Constructor"),
       Sequence(
         Terminal("("),

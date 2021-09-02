@@ -386,8 +386,13 @@ parse =
 
 internalOneOrMoreSpaces : Parser ()
 internalOneOrMoreSpaces =
-    Parser.oneOf
-        [ Parser.symbol " "
-        , Parser.symbol "\n"
-        , Parser.symbol "\u{000D}"
-        ]
+    let
+        f =
+            \c -> c == ' ' || c == '\n' || c == '\u{000D}'
+    in
+    Parser.succeed ()
+        |. Parser.variable
+            { start = f
+            , inner = f
+            , reserved = Set.empty
+            }

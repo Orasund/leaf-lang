@@ -10,14 +10,14 @@ tests =
     [ ( "LetExample"
       , { code = """let hello = "Hello ";
 let world = "World";
-hello.append world"""
+hello .append world"""
         , result = StringVal "Hello World"
         }
       )
     , ( "MutExample"
       , { code = """let hello = "Hello ";
 mut out = "World";
-set out = hello.append out;
+set out = hello .append out;
 out"""
         , result = StringVal "Hello World"
         }
@@ -29,14 +29,16 @@ let hello =
   "Hello ";
 /* This a multi line comment
 /* It may even have nested comment */*/
-hello.append "World" """
+hello .append "World" """
         , result = StringVal "Hello World"
         }
       )
     , ( "BlockBasic"
       , { code = """let hello = "Hello ";
 ( mut out = "World";
-  set out = hello.append out;
+  set out = 
+    hello 
+      .append out;
   out
 )"""
         , result = StringVal "Hello World"
@@ -45,7 +47,7 @@ hello.append "World" """
     , ( "BlockAdvanced"
       , { code = """( let out =
     ( let hello = ( "Hello " );
-      hello.append "World"
+      hello .append "World"
     );
   out
 )"""
@@ -54,7 +56,7 @@ hello.append "World" """
       )
     , ( "BlockUnmutable"
       , { code = """mut out = (let temp = "Hello "; temp);
-set out = (let temp = "World"; out.append temp);
+set out = (let temp = "World"; out .append temp);
 out"""
         , result = StringVal "Hello World"
         }
