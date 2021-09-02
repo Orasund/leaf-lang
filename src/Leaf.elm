@@ -10,15 +10,13 @@ module Leaf exposing
 
 # Basic Evaluation
 
-This package provides a simple way to evaluate Leaf scripts.
+To run this script in Elm you need to call `Leaf.run`.
 
-```elm
-import Leaf exposing (Value(..))
+    import Leaf exposing (Value(..))
 
-"\"Hello World\""
-  |> El.eval Dict.empty
-  --> (StringVal "\"Hello World\"",Dict.empty)
-```
+    "\"Hello World\""
+        |> Leaf.run Dict.empty
+        --> Ok (StringVal "Hello World",Dict.empty)
 
 @docs Exp, Value, run
 
@@ -27,24 +25,24 @@ import Leaf exposing (Value(..))
 
 You can also evaluate context sensitive Leaf scripts.
 
-```
-import Leaf exposing (Value(..))
+    import Leaf exposing (Value(..))
+    import Dict exposing (Dict)
+    import Leaf.Core as Core
 
-let
-  context =
-    [ ("name", Elm.field (StringVal "World")
-    , ("append"
-      , (\s2 s1 -> s1 ++ s2)
-          |> El.binaryFunction (Leaf.typed El.asString) (Leaf.typed El.asString)
-          |> Elm.field
-      )
-    ]
-      |> Dict.fromList
-in
-"\"Hello \".append name"
-  |> El.eval context
-  --> (StringVal "\"Hello World\"",context)
-```
+    context : Dict String Field
+    context =
+        [ StringVal "World" |> Leaf.field "name"
+        , (\s2 s1 -> StringVal (s1 ++ s2))
+            |> Leaf.binaryFun (Leaf.typed Leaf.asString)
+                (Leaf.typed Leaf.asString)
+            |> Leaf.field "append"
+        ]
+            |> Dict.fromList
+            |> Leaf.addExposed Core.package
+
+    "\"Hello \" .append name"
+        |> Leaf.run context
+        --> Ok (StringVal "Hello World",context)
 
 @docs Field, field, mutField, unaryFun, binaryFun, trinaryFun
 
@@ -79,6 +77,8 @@ type Value
     | ExtensionVal (Value -> Result String Value)
 
 
+{-| Internal type for fields
+-}
 type alias Field =
     Semantics.Field
 
@@ -91,12 +91,11 @@ type alias Exp =
 
 {-| States that an extension function takes an untyped value
 
-```
-import Leaf.Core as Core
-import Leaf
+    import Leaf.Core as Core
 
-(Core.isNull >> BoolVal) |> Leaf.unaryFun Leaf.untyped |> Leaf.field "isNull"
-```
+    (Core.isNull >> BoolVal)
+        |> Leaf.unaryFun Leaf.untyped
+        |> Leaf.field "isNull"
 
 -}
 untyped : (Value -> Value) -> Value
@@ -106,14 +105,11 @@ untyped fun =
 
 {-| States that an extension function takes a typed value
 
-```
-import Leaf.Core as Core
-import Leaf
+    import Leaf.Core as Core
 
- Core.if_
-    |> Leaf.trinaryFun (Leaf.typed Leaf.asBool) Leaf.untyped Leaf.untyped
-    |> Leaf.field "if"
-```
+    Core.if_
+        |> Leaf.trinaryFun (Leaf.typed Leaf.asBool) Leaf.untyped Leaf.untyped
+        |> Leaf.field "if"
 
 -}
 typed : (Value -> Result String a) -> (a -> Value) -> Value
@@ -123,12 +119,11 @@ typed mapper fun =
 
 {-| Turns an Elm function with one argument into a Leaf extension
 
-```
-import Leaf.Core as Core
-import Leaf
+    import Leaf.Core as Core
 
-(Core.isNull >> BoolVal) |> Leaf.unaryFun Leaf.untyped |> Leaf.field "isNull"
-```
+    (Core.isNull >> BoolVal)
+        |> Leaf.unaryFun Leaf.untyped
+        |> Leaf.field "isNull"
 
 -}
 unaryFun : ((a -> Value) -> Value) -> (a -> Value) -> Value
@@ -138,14 +133,12 @@ unaryFun a fun =
 
 {-| Turns an Elm function with two argument into a Leaf extension
 
-```
-import Leaf.Core as Core
-import Leaf
+    import Leaf.Core as Core
+    import Leaf exposing (Field)
 
-(\v1 v2 -> equal v1 v2 |> BoolVal)
-    |> Leaf.binaryFun Leaf.untyped Leaf.untyped
-    |> Leaf.field "equal"
-```
+    (\v1 v2 -> Core.equal v1 v2 |> BoolVal)
+        |> Leaf.binaryFun Leaf.untyped Leaf.untyped
+        |> Leaf.field "equal"
 
 -}
 binaryFun : ((a -> Value) -> Value) -> ((b -> Value) -> Value) -> (a -> b -> Value) -> Value
@@ -159,14 +152,12 @@ binaryFun first second fun =
 
 {-| Turns an Elm function with three argument into a Leaf extension
 
-```
-import Leaf.Core as Core
-import Leaf
+    import Leaf.Core as Core
+    import Leaf exposing (Field)
 
-(\v1 v2 -> equal v1 v2 |> BoolVal)
-    |> Leaf.binaryFun Leaf.untyped Leaf.untyped
-    |> Leaf.field "equal"
-```
+    (\v1 v2 -> Core.equal v1 v2 |> BoolVal)
+        |> Leaf.binaryFun Leaf.untyped Leaf.untyped
+        |> Leaf.field "equal"
 
 -}
 trinaryFun :
@@ -185,7 +176,7 @@ trinaryFun first second thrid fun =
                             fun a b c
 
 
-{-| constructs a context field. Use this in combination with Dict.fromList
+{-| Constructs a context field. Use this in combination with Dict.fromList
 -}
 field : String -> Value -> ( String, Field )
 field string value =
@@ -196,7 +187,7 @@ field string value =
     )
 
 
-{-| constructs a mutable context field. Use this in combination with Dict.fromList
+{-| Constructs a mutable context field. Use this in combination with Dict.fromList
 -}
 mutField : String -> Value -> ( String, Field )
 mutField string value =
@@ -207,24 +198,25 @@ mutField string value =
     )
 
 
-{-| evaluates a Leaf script. The dictionary may contain fields that can be called from inside the Leaf script.
+{-| Evaluates a Leaf script. The dictionary may contain fields that can be called from inside the Leaf script.
 
-```
-import Leaf exposing (Value(..))
+    import Leaf exposing (Value(..))
+    import Dict exposing (Dict)
 
-let
-  context =
-    [ StringVal "World" |> Elm.field "name"
-    , (\s2 s1 -> StringVal (s1 ++ s2) )
-          |> Leaf.binaryFunction Leaf.asString Leaf.asString
-          |> Elm.field "append"
-    ]
-      |> Dict.fromList
-in
-"\"Hello \".append name"
-  |> El.run context
-  --> Ok (StringVal "\"Hello World\"",context)
-```
+    context : Dict String Field
+    context =
+        [ StringVal "World" |> Leaf.field "name"
+        , (\s2 s1 -> StringVal (s1 ++ s2) )
+            |> Leaf.binaryFun
+                (Leaf.typed Leaf.asString)
+                (Leaf.typed Leaf.asString)
+            |> Leaf.field "append"
+        ]
+        |> Dict.fromList
+
+    "\"Hello \" .append name"
+        |> Leaf.run context
+        --> Ok (StringVal "Hello World",context)
 
 -}
 run : Dict String Field -> String -> Result String ( Value, Dict String Field )
@@ -235,35 +227,35 @@ run context =
         >> Result.map (Tuple.mapFirst internalFromValue)
 
 
-{-| converts a Leaf null into an Elm unit
+{-| Converts a Leaf null into an Elm unit
 -}
 asNull : Value -> Result String ()
 asNull =
     internalToValue >> Type.null
 
 
-{-| converts a Leaf string into an Elm string
+{-| Converts a Leaf string into an Elm string
 -}
 asString : Value -> Result String String
 asString =
     internalToValue >> Type.string
 
 
-{-| converts a Leaf bool into an Elm bool
+{-| Converts a Leaf bool into an Elm bool
 -}
 asBool : Value -> Result String Bool
 asBool =
     internalToValue >> Type.bool
 
 
-{-| converts a Leaf int into an Elm int
+{-| Converts a Leaf int into an Elm int
 -}
 asInt : Value -> Result String Int
 asInt =
     internalToValue >> Type.int
 
 
-{-| converts a Leaf float into an Elm float
+{-| Converts a Leaf float into an Elm float
 -}
 asFloat : Value -> Result String Float
 asFloat =
@@ -338,8 +330,10 @@ addPackage name package =
 
 {-| Adds a package and exposes all function. This should only be used for essential packages.
 
-    addExposed =
-        Dict.union
+    import Dict
+
+    addExposed
+        --> Dict.union
 
 -}
 addExposed : Dict String Field -> Dict String Field -> Dict String Field

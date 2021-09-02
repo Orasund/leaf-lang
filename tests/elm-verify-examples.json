@@ -1,0 +1,8 @@
+{
+  "root": "../src",
+  "tests": [
+    "Leaf",
+    "Leaf.Core",
+    "./README.md"
+  ]
+}

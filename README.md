@@ -9,4 +9,4 @@ Leaf is
 * context sensitive (similar to Ports in Elm)
 * small (50KB of pure Elm code)
 
-Checkout the interactive documentation ;)
+Checkout the [interactive documentation ;)](https://orasund.github.io/leaf-lang)
