@@ -85,7 +85,11 @@ case context |> Dict.get "error |> Maybe.withDefault NullVal of
     Ok value
   errVal ->
     Err errVal
-```"""
+```
+
+### String
+
+![Syntax for Strings](https://orasund.github.io/leaf-lang/syntax/strings.svg)"""
 
 int : String
 int =
@@ -142,7 +146,6 @@ Function are curried so you can partially apply a function this also works for e
 ### Function
 
 ![Syntax for Functions](https://orasund.github.io/leaf-lang/syntax/function.svg)"""
-"""
 
 extensionFunctions : String
 extensionFunctions =

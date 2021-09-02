@@ -71,17 +71,10 @@ Any type specific functions, like the `append` function, must be implemented by 
 This has practical reasons: Maintaining a language and libraries for it is a lot of work. 
 It's therefore better to split these more specific functions off into their own projects.
 
-Extension functions may start with either
-* Uppercase letter (`A,B,C,...`)
-* Lowercase letter (`a,b,c,...`)
+<component with-label="ExtensionFunction" />
 
-followed by 
+### InputVariable
 
-* Letters (`A,a,B,b,C,c,...`)
-* Numerals (`0,1,2,3,...`)
-* Underscore (`_`) and
-* Collon (`:`)
+![Syntax for input variables](https://orasund.github.io/leaf-lang/syntax/inputVariable.svg)
 
-This way we can allow the naming convention `Package::functionName`. 
-
-<component with-label="ExtensionFunction" />"""
+This way we can allow the naming convention `Package::functionName`. """

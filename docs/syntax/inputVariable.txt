@@ -1,0 +1,10 @@
+Diagram(
+  NonTerminal('A-Z'),
+  Choice(2,
+    NonTerminal('a-z'),
+    NonTerminal('A-Z'),
+    NonTerminal('0-9'),
+    '_',
+    ':'
+  )
+)

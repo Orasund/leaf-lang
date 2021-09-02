@@ -79,16 +79,14 @@ stringEscapeHelper escapeChars =
                    , Parser.succeed "\t" |. Parser.token "t"
                    , Parser.succeed "\u{000D}" |. Parser.token "r"
                    , Parser.succeed "\\" |. Parser.token "\\"
+                   , Parser.succeed "\"" |. Parser.token "\""
                    ]
             )
 
 
 parseString : Parser String
 parseString =
-    Parser.oneOf
-        [ stringHelper '"'
-        , stringHelper '\''
-        ]
+    stringHelper '"'
 
 
 comment : Parser ()
@@ -281,7 +279,7 @@ pipeExp e =
             Parser.oneOf
                 [ Parser.backtrackable <|
                     Parser.succeed (\a -> Loop (a :: revList))
-                        |. Parser.spaces
+                        |. internalOneOrMoreSpaces
                         |. Parser.symbol "."
                         |. Parser.spaces
                         |= (singleExp |> Parser.andThen multiExp)

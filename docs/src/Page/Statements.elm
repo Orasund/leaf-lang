@@ -39,6 +39,10 @@ The variable must start with an lowercase letter (`a,b,c`) followed by
 * Numerals (`0,1,2,3,...`)
 * Underscore (`_`)
 
+### Variable
+
+![Syntax for Let](https://orasund.github.io/leaf-lang/syntax/variable.svg)
+
 ### Let
 
 ![Syntax for Let](https://orasund.github.io/leaf-lang/syntax/let.svg)"""

@@ -1,0 +1,18 @@
+Diagram(
+  '"',
+  ZeroOrMore(
+    Choice(0,
+      NonTerminal('String not containing " or \\ '),
+      Sequence("\\",
+        Choice(2,
+          '"',
+          "\\",
+          "n",
+          "t",
+          "r"
+        )
+      )
+    )
+  ),
+  '"'
+)

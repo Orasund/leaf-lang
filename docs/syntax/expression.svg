@@ -128,49 +128,39 @@
 <path d="M621 61h10"></path>
 <path d="M60 61a10 10 0 0 0 -10 10v90a10 10 0 0 0 10 10"></path>
 <g>
-<path d="M60 171h145.25"></path>
-<path d="M475.75 171h145.25"></path>
+<path d="M60 171h160.25"></path>
+<path d="M460.75 171h160.25"></path>
 <g>
-<path d="M205.25 171h0"></path>
-<path d="M316.25 171h0"></path>
-<path d="M205.25 171h20"></path>
+<path d="M220.25 171h0"></path>
+<path d="M331.25 171h0"></path>
+<path d="M220.25 171h20"></path>
 <g>
-<path d="M225.25 171h71"></path>
+<path d="M240.25 171h71"></path>
 </g>
-<path d="M296.25 171h20"></path>
-<path d="M205.25 171a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M311.25 171h20"></path>
+<path d="M220.25 171a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
 <g class="non-terminal ">
-<path d="M225.25 191h0"></path>
-<path d="M296.25 191h0"></path>
-<rect x="225.25" y="180" width="71" height="22"></rect>
-<text x="260.75" y="195">Spaces</text>
+<path d="M240.25 191h0"></path>
+<path d="M311.25 191h0"></path>
+<rect x="240.25" y="180" width="71" height="22"></rect>
+<text x="275.75" y="195">Spaces</text>
 </g>
-<path d="M296.25 191a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+<path d="M311.25 191a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
 </g>
-<path d="M316.25 171h10"></path>
+<path d="M331.25 171h10"></path>
 <g class="non-terminal ">
-<path d="M326.25 171h0"></path>
-<path d="M354.75 171h0"></path>
-<rect x="326.25" y="160" width="28.5" height="22"></rect>
-<text x="340.5" y="175">.</text>
+<path d="M341.25 171h0"></path>
+<path d="M369.75 171h0"></path>
+<rect x="341.25" y="160" width="28.5" height="22"></rect>
+<text x="355.5" y="175">.</text>
 </g>
-<path d="M354.75 171h10"></path>
-<g>
-<path d="M364.75 171h0"></path>
-<path d="M475.75 171h0"></path>
-<path d="M364.75 171h20"></path>
-<g>
-<path d="M384.75 171h71"></path>
-</g>
-<path d="M455.75 171h20"></path>
-<path d="M364.75 171a10 10 0 0 1 10 10v0a10 10 0 0 0 10 10"></path>
+<path d="M369.75 171h10"></path>
+<path d="M379.75 171h10"></path>
 <g class="non-terminal ">
-<path d="M384.75 191h0"></path>
-<path d="M455.75 191h0"></path>
-<rect x="384.75" y="180" width="71" height="22"></rect>
-<text x="420.25" y="195">Spaces</text>
-</g>
-<path d="M455.75 191a10 10 0 0 0 10 -10v0a10 10 0 0 1 10 -10"></path>
+<path d="M389.75 171h0"></path>
+<path d="M460.75 171h0"></path>
+<rect x="389.75" y="160" width="71" height="22"></rect>
+<text x="425.25" y="175">Spaces</text>
 </g>
 </g>
 <path d="M621 171a10 10 0 0 0 10 -10v-90a10 10 0 0 0 -10 -10"></path>
