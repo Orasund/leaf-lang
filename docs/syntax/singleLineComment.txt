@@ -1,5 +1,5 @@
 Diagram(
-  Terminal("\\\\"),
+  Terminal("//"),
   NonTerminal('String not containing "\\n"'),
   Terminal("\\n"),
 )

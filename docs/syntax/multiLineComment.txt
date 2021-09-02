@@ -1,7 +1,8 @@
 Diagram(
-  Terminal("\\*"),
-  NonTerminal('String not containing "\\*" or "*\\"'),
+  Stack(
+  Sequence(Terminal("/*"),
+  NonTerminal('String not containing "/*" or "*/"')),
   Optional(NonTerminal("MultiLineComment"),"skip"),
-  NonTerminal('String not containing "\\*" or "*\\"'),
-  Terminal("*\\"),
+  Sequence(NonTerminal('String not containing "/*" or "*/"'),
+  Terminal("*/"),))
 )

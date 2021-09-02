@@ -20,7 +20,7 @@ chapter =
 introduction : String
 introduction =
     """
-All examples up until now where expressions. So we will now look into statements.
+All examples up until now were expressions. We will now take a look at statements.
 
 ### Statement
 
@@ -33,11 +33,6 @@ letContent =
 The keyword `let` specifies a constant value. Same as in Elm, this value can not be changed afterwards.
 
 <component with-label="LetExample" />
-
-The variable must start with an lowercase letter (`a,b,c`) followed by
-* Letters (`A,a,B,b,C,c,...`)
-* Numerals (`0,1,2,3,...`)
-* Underscore (`_`)
 
 ### Variable
 
@@ -83,7 +78,7 @@ comments =
 blocks : String
 blocks =
     """
-You can turn group of statements into a statement using blocks. Bocks consist of statements followed by a single expression (the return value).
+You can turn group of statements into an expression using blocks. Bocks consist of statements followed by a single expression (the return value).
 
 <component with-label="BlockBasic" />
 
@@ -91,7 +86,7 @@ You can use a block anywhere you'd usually use an expression.
 
 <component with-label="BlockAdvanced" />
 
-Any variables that were constructed inside a block get destroyed ones the block is over. 
+Any variables that were constructed inside get destroyed at the end of the block. 
 Additionally, variables outside the block can only be read, not written!
 
 <component with-label="BlockUnmutable" />

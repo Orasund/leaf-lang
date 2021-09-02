@@ -2,7 +2,7 @@ module Leaf exposing
     ( Exp, Value(..), run
     , Field, field, mutField, unaryFun, binaryFun, trinaryFun
     , untyped, typed, asNull, asBool, asString, asFloat, asInt, asNullable, asAnyList, asList, asObject, asFunction, asExtension
-    , toString
+    , toString, addPackage, addExposed
     )
 
 {-| This is the main module for working with Leaf scripts.
@@ -53,7 +53,7 @@ in
 
 # Utility Functions
 
-@docs toString
+@docs toString, addPackage, addExposed
 
 -}
 
@@ -322,6 +322,29 @@ asExtension =
 toString : Value -> String
 toString =
     internalToValue >> Util.valueToString
+
+
+{-| Adds a package to a context and applies the naming convention `Package::functionName`.
+-}
+addPackage : String -> Dict String Field -> Dict String Field -> Dict String Field
+addPackage name package =
+    Dict.union
+        (package
+            |> Dict.toList
+            |> List.map (\( k, v ) -> ( name ++ "::" ++ k, v ))
+            |> Dict.fromList
+        )
+
+
+{-| Adds a package and exposes all function. This should only be used for essential packages.
+
+    addExposed =
+        Dict.union
+
+-}
+addExposed : Dict String Field -> Dict String Field -> Dict String Field
+addExposed =
+    Dict.union
 
 
 

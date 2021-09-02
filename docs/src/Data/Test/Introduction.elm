@@ -5,7 +5,7 @@ import Dict exposing (Dict)
 import Expect
 import Leaf exposing (Value(..))
 import Test exposing (..)
-
+import Leaf.Core as Core
 
 tests : Dict String Example
 tests =
@@ -71,6 +71,7 @@ contextSensitiveString =
                 |> Leaf.field "append"
             ]
                 |> Dict.fromList
+                |> Leaf.addExposed Core.package
     in
     "\\"Hello \\".append name"
         |> Leaf.run context
@@ -99,6 +100,7 @@ helloWorldTest =
                             |> Leaf.field "append"
                         ]
                             |> Dict.fromList
+                            |> Leaf.addExposed Core.package
                 in
                 "\"Hello \" .append name"
                     |> Leaf.run context

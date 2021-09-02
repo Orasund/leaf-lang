@@ -53,8 +53,7 @@ out"""
         }
       )
     , ( "IntValue"
-      , { code = """//Note that we need to use brackets here
-42 .isInt"""
+      , { code = """42 .isInt"""
         , result = BoolVal True
         }
       )

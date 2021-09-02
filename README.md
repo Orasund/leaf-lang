@@ -1,5 +1,12 @@
-# Leaf - A multi paradigm scripting language for Elm
+# Leaf
 
-Leaf is a multi paradigm scripting language for Elm. 
-It is designed to be extendable to fit your needs, 
-and it's multi paradigm nature allows anyone to use it.
+Leaf is a multi paradigm scripting language for Elm. It is designed to be extendable to fit your needs.
+
+Leaf is
+* dynamically typed
+* extendable (by normal Elm functions)
+* based on Lua with a few features taken from Rust
+* context sensitive (similar to Ports in Elm)
+* small (50KB of pure Elm code)
+
+Checkout the interactive documentation ;)

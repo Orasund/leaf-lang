@@ -45,11 +45,11 @@ Null is a type with a single value (itself). It behaves the same as `()` in Elm.
 
 <component with-label="NullValue" />
 
-You can use null similar to `Nothing`.
+You can use `null` similar to `Nothing`.
 
 <component with-label="NullableValue" />
 
-In our definition of append we have specified that we only allow strings. So if we try appending null, we get a runtime error.
+In our definition of `append` we have specified that we only allow strings. So, if we try appending `null`, we get a runtime error.
 
 ### Null
 
@@ -89,17 +89,17 @@ case context |> Dict.get "error |> Maybe.withDefault NullVal of
 
 ### String
 
-![Syntax for Strings](https://orasund.github.io/leaf-lang/syntax/strings.svg)"""
+![Syntax for Strings](https://orasund.github.io/leaf-lang/syntax/string.svg)"""
 
 int : String
 int =
-  """Leaf has a integers but no characters, so it solve two roles.
+  """Leaf has a integers same as Elm. Though it does not have chars.
 
 <component with-label="IntValue" />"""
 
 float : String
 float =
-  """Float are similar to Elm's floats, yet different: Nan, Inf and -Inf are not numbers so when dividing by zero you should return an error instead. 
+  """Floats are similar to Elm's floats, yet different: Nan, Inf and -Inf are not numbers so when dividing by zero you should return an error instead. 
 
 <component with-label="FloatValue" />"""
 
@@ -139,7 +139,7 @@ The function may be mutable. In this case the function can be overwritten by ano
 
 <component with-label="MutFunValue" />
 
-Function are curried so you can partially apply a function this also works for extension functions.
+Function are curried so you can partially apply a function. This also works for extension functions.
 
 <component with-label="CurryFun" />
 
