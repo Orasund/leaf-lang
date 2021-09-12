@@ -2,7 +2,6 @@ module Internal.Syntax exposing (parse)
 
 import Dict exposing (Dict)
 import Internal.Language exposing (Closure, Exp(..), Statement(..))
-import Internal.Util as Util
 import Parser exposing (Parser)
 import Parser.Char as Char
 import Parser.Check as Check
@@ -38,106 +37,86 @@ parseVariable =
 {-| -}
 stringHelper : Char -> Parser String
 stringHelper quoteChar =
-    let
-        quoteString =
-            String.fromChar quoteChar
+    Parser.oneOf
+        [ Parser.succeed identity
+            |> Parser.drop (Char.char '\\')
+            |> Parser.take stringEscapeHelper
+        , [ Char.char quoteChar
+          , Char.char '\\'
+          ]
+            |> Parser.oneOf
+            |> Char.except
+            |> Sequence.zeroOrMore
+            |> Parser.textOf
+        ]
 
-        isNotEndOrEscape c =
-            c /= quoteChar && c /= '\\'
-    in
+
+stringEscapeHelper : Parser String
+stringEscapeHelper =
     Parser.succeed identity
-        |> Parser.drop (Common.text quoteString)
-        |> Parser.take
-            (Parser.loop []
-                (\chunks ->
-                    Parser.oneOf
-                        [ Parser.succeed (\chunk -> chunk :: chunks)
-                            |= stringEscapeHelper [ quoteString ]
-                            |> Parser.map Parser.Loop
-                        , Parser.succeed (List.reverse chunks |> String.join "")
-                            |. Parser.token quoteString
-                            |> Parser.map Parser.Done
-                        , Parser.getChompedString (Parser.chompWhile isNotEndOrEscape)
-                            |> Parser.andThen
-                                (\s ->
-                                    if s == "" then
-                                        Parser.problem ""
-
-                                    else
-                                        Parser.succeed (s :: chunks)
-                                )
-                            |> Parser.map Parser.Loop
-                        ]
-                )
-            )
-
-
-stringEscapeHelper : List String -> Parser String
-stringEscapeHelper escapeChars =
-    let
-        mapString s =
-            Parser.succeed s
-                |> Parser.drop (Common.text s)
-    in
-    Parser.succeed identity
-        |> Parser.drop (Common.text "\\")
         |> Parser.take
             (Parser.oneOf
-                (List.map mapString escapeChars
-                    ++ [ Parser.succeed "\n" |> Parser.drop (Common.text "n")
-                       , Parser.succeed "\t" |> Parser.drop (Common.text "t")
-                       , Parser.succeed "\u{000D}" |> Parser.drop (Common.text "r")
-                       , Parser.succeed "\\" |> Parser.drop (Common.text "\\")
-                       , Parser.succeed "\"" |> Parser.drop (Common.text "\"")
-                       ]
-                )
+                [ Parser.succeed "\\\n" |> Parser.drop (Char.char 'n')
+                , Parser.succeed "\\\t" |> Parser.drop (Char.char 't')
+                , Parser.succeed "\\\u{000D}" |> Parser.drop (Char.char 'r')
+                , Parser.succeed "\\\\" |> Parser.drop (Char.char '\\')
+                , Parser.succeed "\\\"" |> Parser.drop (Char.char '"')
+                ]
             )
 
 
 parseString : Parser String
 parseString =
-    stringHelper '"'
+    Parser.succeed identity
+        |> Parser.drop (Char.char '"')
+        |> Parser.take (stringHelper '"')
+        |> Parser.drop (Char.char '"')
         |> Parser.into "String"
 
 
-multiLineCommentHelper : Parser ()
-multiLineCommentHelper =
-    Parser.take
-        (Sequence.until Parser.oneOf
-            [ Common.text "*/"
-            , Common.text "/*"
-            ]
-        )
-        |> Parser.andThen
-            (\_ string ->
-                case string of
-                    "/*" ->
-                        Parser.lazy (\_ -> multiLineCommentHelper)
 
-                    _ ->
-                        Parser.succeed ()
+{--multiLineCommentHelper : Parser ()
+multiLineCommentHelper =
+    Paser.succeed identity
+        |> Parser.drop (Common.text "/*")
+        |> Parser.drop
+            (Sequence.until
+                (Parser.oneOf
+                    [ Common.text "*/" |> Parser.map (\_ -> False)
+                    , Common.text "/*" |> Parser.map (\_ -> True)
+                    ]
+                )
+                |> Parser.andThen
+                    (\( _, isStart ) ->
+                        if isStart then
+                            Parser.lazy (\_ -> multiLineCommentHelper)
+
+                        else
+                            Parser.succeed ()
+                    )
             )
+        |> Parser.drop (Common.text "*/")
 
 
 multiLineComment : Parser ()
 multiLineComment =
     Parser.succeed
-        |> Parser.drop (Common.text "/*")
         |> Parser.take multiLineCommentHelper
-        |> Parser.take Common.spaces
+        |> Parser.take Common.spaces--}
 
 
 comment : Parser ()
 comment =
-    Common.spaces
-        |> Parser.take
+    Parser.succeed ()
+        |> Parser.drop
             (Sequence.zeroOrMore
                 (Parser.oneOf
                     [ Parser.succeed identity
                         |> Parser.drop (Common.text "//")
                         |> Parser.take Common.line
                         |> Parser.drop Common.spaces
-                    , multiLineComment
+
+                    --, multiLineComment
                     ]
                 )
             )
@@ -148,9 +127,9 @@ parseBool : Parser Bool
 parseBool =
     Parser.oneOf
         [ Parser.succeed (always True)
-            |> Parser.take Common.text "true"
+            |> Parser.take (Common.text "true")
         , Parser.succeed (always False)
-            |> Parser.take Common.text "false"
+            |> Parser.take (Common.text "false")
         ]
         |> Parser.into "Boolean"
 
@@ -158,22 +137,10 @@ parseBool =
 parseNumber : Parser Exp
 parseNumber =
     Parser.oneOf
-        [ Parser.succeed identity
-            |. Parser.symbol "-"
-            |= Parser.number
-                { int = Just (negate >> IntExp)
-                , hex = Nothing
-                , octal = Nothing
-                , binary = Nothing
-                , float = Just (negate >> FloatExp)
-                }
-        , Parser.number
-            { int = Just IntExp
-            , hex = Nothing
-            , octal = Nothing
-            , binary = Nothing
-            , float = Just FloatExp
-            }
+        [ Parser.succeed IntExp
+            |> Parser.take Common.int
+        , Parser.succeed FloatExp
+            |> Parser.take Common.number
         ]
         |> Parser.into "Number"
 
@@ -193,7 +160,7 @@ parseObjectField : Parser ( String, Exp )
 parseObjectField =
     Parser.succeed Tuple.pair
         |> Parser.take parseVariable
-        |> Parser.drop Common.token ':'
+        |> Parser.drop (Common.token (Char.char ':'))
         |> Parser.take parseExp
 
 
@@ -204,7 +171,7 @@ parseObject =
             (internalSequence
                 { start = '{'
                 , separator = ','
-                , end = "}"
+                , end = '}'
                 , item = parseObjectField
                 }
             )
@@ -228,7 +195,8 @@ functionExp =
                         |> FunctionExp (Just last)
     in
     Parser.succeed identity
-        |> Parser.drop (Common.token (Common.text "fun"))
+        |> Parser.drop (Common.text "fun")
+        |> Parser.drop Common.spaces
         |> Parser.take parseVariable
         |> Parser.andThen
             (\a ->
@@ -249,14 +217,14 @@ functionExp =
 singleExp : Parser Exp
 singleExp =
     Parser.succeed identity
-        |> Parser.drop comment
+        |> Parser.drop (Sequence.maybe comment)
         |> Parser.take
             (Parser.oneOf
-                [ parseCapVar |> Parser.map Variable
-                , Parser.lazy (\_ -> functionExp)
+                [ Parser.lazy (\_ -> functionExp)
                 , Common.text "null" |> Parser.map (always NullExp)
                 , parseString |> Parser.map StringExp
                 , parseBool |> Parser.map BoolExp
+                , parseCapVar |> Parser.map Variable
                 , parseNumber
                 , Parser.lazy (\_ -> parseList) |> Parser.map ListExp
                 , Parser.succeed ClosureExp
@@ -299,9 +267,9 @@ pipeExp e =
     Sequence.zeroOrMore
         (Parser.succeed identity
             |> Parser.drop (Sequence.oneOrMore Char.space)
-            |> Parser.drop Char.char '.'
-            |> Common.spaces
-            |> (singleExp |> Parser.andThen multiExp)
+            |> Parser.drop (Char.char '.')
+            |> Parser.drop Common.spaces
+            |> Parser.take (singleExp |> Parser.andThen multiExp)
         )
         |> Parser.andThen
             (\list ->
@@ -331,6 +299,7 @@ parseExp =
 parseStatement : Parser Statement
 parseStatement =
     Parser.succeed identity
+        |> Parser.drop (Sequence.maybe comment)
         |> Parser.take
             (Parser.oneOf
                 [ Parser.succeed Let
@@ -353,7 +322,9 @@ parseStatement =
                     |> Parser.take parseExp
                 ]
             )
-        |> Parser.drop Common.token (Char.char ';')
+        |> Parser.drop Common.spaces
+        |> Parser.drop (Char.char ';')
+        |> Parser.drop Common.spaces
         |> Parser.into "Statement"
 
 
@@ -365,20 +336,20 @@ parseBlock =
             , return = return
             }
         )
-        |> Parser.take Sequence.zeroOrMore parseStatement
+        |> Parser.take (Sequence.zeroOrMore parseStatement)
         |> Parser.take parseExp
         |> Parser.into "Block"
 
 
 parse : String -> Result String Closure
-parse =
-    Parser.parse
+parse string =
+    Parser.parse string
         (Parser.succeed identity
             |> Parser.take parseBlock
             |> Parser.drop Common.spaces
             |> Parser.drop Check.end
         )
-        >> Result.mapError Error.dumpCodeSnippet
+        |> Result.mapError (Error.dump "" >> String.join "\n")
 
 
 
@@ -393,20 +364,26 @@ internalSequence :
     , end : Char
     , item : Parser a
     }
-    -> List (Parser a)
+    -> Parser (List a)
 internalSequence args =
     Parser.succeed (Maybe.withDefault [])
-        |> Parser.drop (Common.token (Char.char args.start))
-        |> Sequence.maybe
-            (Parser.succeed (\a list -> a :: list)
-                |> args.item
-                |> Sequence.zeroOrMore
-                    (Parser.succeed identity
-                        |> Common.token (Char.char args.separator)
-                        |> args.item
-                    )
+        |> Parser.drop (Char.char args.start)
+        |> Parser.drop Common.spaces
+        |> Parser.take
+            (Sequence.maybe
+                (Parser.succeed (\a list -> a :: list)
+                    |> Parser.take args.item
+                    |> Parser.take
+                        (Sequence.zeroOrMore
+                            (Parser.succeed identity
+                                |> Parser.drop (Common.token (Char.char args.separator))
+                                |> Parser.take args.item
+                            )
+                        )
+                )
             )
-        |> Parser.drop (Common.token (Char.char args.end))
+        |> Parser.drop Common.spaces
+        |> Parser.drop (Char.char args.end)
 
 
 internalVariable :
@@ -416,6 +393,22 @@ internalVariable :
     }
     -> Parser String
 internalVariable args =
-    Parser.succeed (\a b -> String.cons a b)
-        |> Parser.take args.start
-        |> Parser.take (Parser.textOf (Sequence.oneOrMore args.inner))
+    Parser.oneOf
+        [ args.reserved
+            |> Set.toList
+            |> List.map
+                (\string ->
+                    Parser.succeed identity
+                        |> Parser.take (Common.text string)
+                        |> Parser.drop Check.wordBoundary
+                )
+            |> Parser.oneOf
+        , Parser.succeed (\a b -> String.cons a b)
+            |> Parser.take args.start
+            |> Parser.take
+                (args.inner
+                    |> Parser.oneOf
+                    |> Sequence.oneOrMore
+                    |> Parser.textOf
+                )
+        ]
