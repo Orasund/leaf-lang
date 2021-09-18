@@ -1,6 +1,7 @@
 module Page.Types exposing (chapter)
 
 import Data.Shared exposing (Model)
+import Data.Test.Types as Test
 import ElmBook.Chapter as Chapter
 import ElmBook.ElmUI exposing (Chapter)
 import View.Chapter as Chapter
@@ -22,6 +23,7 @@ chapter =
       ]
     )
 
+
 introduction : String
 introduction =
     """
@@ -37,6 +39,7 @@ Leaf is dynamically typed (just like JavaScript), this means values have types, 
 
 ![Syntax for Expressions](https://orasund.github.io/leaf-lang/syntax/constructor.svg)
 """
+
 
 null : String
 null =
@@ -55,9 +58,10 @@ In our definition of `append` we have specified that we only allow strings. So, 
 
 ![Syntax for Null](https://orasund.github.io/leaf-lang/syntax/null.svg)"""
 
+
 bool : String
 bool =
-  """Booleans can either be `true` or `false`.
+    """Booleans can either be `true` or `false`.
 
 <component with-label="TrueValue" />
 
@@ -67,9 +71,10 @@ bool =
 
 ![Syntax for Booleans](https://orasund.github.io/leaf-lang/syntax/bool.svg)"""
 
+
 string : String
 string =
-  """Strings are the same as Strings in Elm. Leaf has neither exceptions nor a result type. Instead you can define an error variable that contains your error message.
+    """Strings are the same as Strings in Elm. Leaf has neither exceptions nor a result type. Instead you can define an error variable that contains your error message.
 
 <component with-label="StringValue" />
 
@@ -91,17 +96,20 @@ case context |> Dict.get "error |> Maybe.withDefault NullVal of
 
 ![Syntax for Strings](https://orasund.github.io/leaf-lang/syntax/string.svg)"""
 
+
 int : String
 int =
-  """Leaf has a integers same as Elm. Though it does not have chars.
+    """Leaf has a integers same as Elm. Though it does not have chars.
 
 <component with-label="IntValue" />"""
 
+
 float : String
 float =
-  """Floats are similar to Elm's floats, yet different: Nan, Inf and -Inf are not numbers so when dividing by zero you should return an error instead. 
+    """Floats are similar to Elm's floats, yet different: Nan, Inf and -Inf are not numbers so when dividing by zero you should return an error instead. 
 
 <component with-label="FloatValue" />"""
+
 
 list : String
 list =
@@ -115,6 +123,7 @@ Lists do no allow a random access, so therefore it takes linear time to get or u
 
 ![Syntax for Lists](https://orasund.github.io/leaf-lang/syntax/list.svg)"""
 
+
 object : String
 object =
     """Objects are the same as objects in javascript. They contain key-value pairs that may be inserted or removed. Behind the scenes its just a Elm Dict of type `Leaf.Value`.
@@ -125,9 +134,16 @@ object =
 
 <component with-label="EmptyObj" />
 
+To get the value inside an object you have to define your own extension function.
+
+```
+""" ++ Test.objectGetterString ++ """
+```
+
 ### Object
 
 ![Syntax for objects](https://orasund.github.io/leaf-lang/syntax/object.svg)"""
+
 
 function : String
 function =
@@ -146,6 +162,7 @@ Function are curried so you can partially apply a function. This also works for 
 ### Function
 
 ![Syntax for Functions](https://orasund.github.io/leaf-lang/syntax/function.svg)"""
+
 
 extensionFunctions : String
 extensionFunctions =

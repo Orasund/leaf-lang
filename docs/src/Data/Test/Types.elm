@@ -1,8 +1,11 @@
-module Data.Test.Types exposing (tests)
+module Data.Test.Types exposing (objectGetterString, tests, testsInElm)
 
 import Data.Example exposing (Example)
 import Dict exposing (Dict)
+import Expect
 import Leaf exposing (Value(..))
+import Leaf.Core as Core
+import Test exposing (..)
 
 
 tests : Dict String Example
@@ -72,14 +75,14 @@ out"""
     )
   ]
 ]"""
-        , result = ListVal [BoolVal True,ListVal [IntVal 1,StringVal "Hello World",BoolVal True,FloatVal 42]]
+        , result = ListVal [ BoolVal True, ListVal [ IntVal 1, StringVal "Hello World", BoolVal True, FloatVal 42 ] ]
         }
       )
     , ( "ObjValue"
       , { code = """{ helloWorld : null,
   favoriteNumber : 42
 }"""
-        , result = ObjectVal (Dict.fromList [("favoriteNumber",IntVal 42),("helloWorld",NullVal)])
+        , result = ObjectVal (Dict.fromList [ ( "favoriteNumber", IntVal 42 ), ( "helloWorld", NullVal ) ])
         }
       )
     , ( "EmptyObj"
@@ -88,7 +91,7 @@ out"""
         }
       )
     , ( "FunctionValue"
-      , { code = """(fun hello world -> hello .append world) "Hello" \"World\"
+      , { code = """(fun hello world -> hello .append world) "Hello" "World"
   .isFunction"""
         , result = BoolVal True
         }
@@ -113,3 +116,58 @@ out"""
       )
     ]
         |> Dict.fromList
+
+
+objectGetterString : String
+objectGetterString =
+    """let
+    objectPackage =
+      [ (\\string obj ->
+          obj
+          |> Dict.get string
+          |> Maybe.withDefault NullVal 
+        )
+          |> Leaf.binaryFun (Leaf.typed Leaf.asString)
+              (Leaf.typed Leaf.asObject)
+          |> Leaf.field "get"
+      ]
+          |> Dict.fromList
+
+    context =
+        Core.package
+          |> Leaf.addPackage "Object" objectPackage
+in
+"{ string : \\"Hello World\\"} .Object::get \\"string\\""
+    |> Leaf.run context"""
+
+
+testsInElm : Test
+testsInElm =
+    Test.describe "Types Elm Test"
+        [ Test.test "Object Getter" <|
+            \_ ->
+                let
+                    objectPackage =
+                        [ (\string obj ->
+                            obj
+                                |> Dict.get string
+                                |> Maybe.withDefault NullVal
+                          )
+                            |> Leaf.binaryFun (Leaf.typed Leaf.asString)
+                                (Leaf.typed Leaf.asObject)
+                            |> Leaf.field "get"
+                        ]
+                            |> Dict.fromList
+
+                    context =
+                        Core.package
+                            |> Leaf.addPackage "Object" objectPackage
+                in
+                "{ string : \"Hello World\"} .Object::get \"string\""
+                    |> Leaf.run context
+                    |> Result.map Tuple.first
+                    |> Expect.equal
+                        (Ok <|
+                            StringVal "Hello World"
+                        )
+        ]

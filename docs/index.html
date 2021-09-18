@@ -807,6 +807,66 @@ var _List_sortWith = F2(function(f, xs)
 
 
 
+// MATH
+
+var _Basics_add = F2(function(a, b) { return a + b; });
+var _Basics_sub = F2(function(a, b) { return a - b; });
+var _Basics_mul = F2(function(a, b) { return a * b; });
+var _Basics_fdiv = F2(function(a, b) { return a / b; });
+var _Basics_idiv = F2(function(a, b) { return (a / b) | 0; });
+var _Basics_pow = F2(Math.pow);
+
+var _Basics_remainderBy = F2(function(b, a) { return a % b; });
+
+// https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/divmodnote-letter.pdf
+var _Basics_modBy = F2(function(modulus, x)
+{
+	var answer = x % modulus;
+	return modulus === 0
+		? _Debug_crash(11)
+		:
+	((answer > 0 && modulus < 0) || (answer < 0 && modulus > 0))
+		? answer + modulus
+		: answer;
+});
+
+
+// TRIGONOMETRY
+
+var _Basics_pi = Math.PI;
+var _Basics_e = Math.E;
+var _Basics_cos = Math.cos;
+var _Basics_sin = Math.sin;
+var _Basics_tan = Math.tan;
+var _Basics_acos = Math.acos;
+var _Basics_asin = Math.asin;
+var _Basics_atan = Math.atan;
+var _Basics_atan2 = F2(Math.atan2);
+
+
+// MORE MATH
+
+function _Basics_toFloat(x) { return x; }
+function _Basics_truncate(n) { return n | 0; }
+function _Basics_isInfinite(n) { return n === Infinity || n === -Infinity; }
+
+var _Basics_ceiling = Math.ceil;
+var _Basics_floor = Math.floor;
+var _Basics_round = Math.round;
+var _Basics_sqrt = Math.sqrt;
+var _Basics_log = Math.log;
+var _Basics_isNaN = isNaN;
+
+
+// BOOLEANS
+
+function _Basics_not(bool) { return !bool; }
+var _Basics_and = F2(function(a, b) { return a && b; });
+var _Basics_or  = F2(function(a, b) { return a || b; });
+var _Basics_xor = F2(function(a, b) { return a !== b; });
+
+
+
 var _String_cons = F2(function(chr, str)
 {
 	return chr + str;
@@ -1116,66 +1176,6 @@ function _String_fromList(chars)
 	return _List_toArray(chars).join('');
 }
 
-
-
-
-// MATH
-
-var _Basics_add = F2(function(a, b) { return a + b; });
-var _Basics_sub = F2(function(a, b) { return a - b; });
-var _Basics_mul = F2(function(a, b) { return a * b; });
-var _Basics_fdiv = F2(function(a, b) { return a / b; });
-var _Basics_idiv = F2(function(a, b) { return (a / b) | 0; });
-var _Basics_pow = F2(Math.pow);
-
-var _Basics_remainderBy = F2(function(b, a) { return a % b; });
-
-// https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/divmodnote-letter.pdf
-var _Basics_modBy = F2(function(modulus, x)
-{
-	var answer = x % modulus;
-	return modulus === 0
-		? _Debug_crash(11)
-		:
-	((answer > 0 && modulus < 0) || (answer < 0 && modulus > 0))
-		? answer + modulus
-		: answer;
-});
-
-
-// TRIGONOMETRY
-
-var _Basics_pi = Math.PI;
-var _Basics_e = Math.E;
-var _Basics_cos = Math.cos;
-var _Basics_sin = Math.sin;
-var _Basics_tan = Math.tan;
-var _Basics_acos = Math.acos;
-var _Basics_asin = Math.asin;
-var _Basics_atan = Math.atan;
-var _Basics_atan2 = F2(Math.atan2);
-
-
-// MORE MATH
-
-function _Basics_toFloat(x) { return x; }
-function _Basics_truncate(n) { return n | 0; }
-function _Basics_isInfinite(n) { return n === Infinity || n === -Infinity; }
-
-var _Basics_ceiling = Math.ceil;
-var _Basics_floor = Math.floor;
-var _Basics_round = Math.round;
-var _Basics_sqrt = Math.sqrt;
-var _Basics_log = Math.log;
-var _Basics_isNaN = isNaN;
-
-
-// BOOLEANS
-
-function _Basics_not(bool) { return !bool; }
-var _Basics_and = F2(function(a, b) { return a && b; });
-var _Basics_or  = F2(function(a, b) { return a || b; });
-var _Basics_xor = F2(function(a, b) { return a !== b; });
 
 
 
@@ -4744,6 +4744,420 @@ var $elm$core$Basics$apR = F2(
 	function (x, f) {
 		return f(x);
 	});
+var $elm$core$Result$Err = function (a) {
+	return {$: 'Err', a: a};
+};
+var $elm$json$Json$Decode$Failure = F2(
+	function (a, b) {
+		return {$: 'Failure', a: a, b: b};
+	});
+var $elm$json$Json$Decode$Field = F2(
+	function (a, b) {
+		return {$: 'Field', a: a, b: b};
+	});
+var $elm$json$Json$Decode$Index = F2(
+	function (a, b) {
+		return {$: 'Index', a: a, b: b};
+	});
+var $elm$core$Result$Ok = function (a) {
+	return {$: 'Ok', a: a};
+};
+var $elm$json$Json$Decode$OneOf = function (a) {
+	return {$: 'OneOf', a: a};
+};
+var $elm$core$Basics$False = {$: 'False'};
+var $elm$core$Basics$add = _Basics_add;
+var $elm$core$Maybe$Just = function (a) {
+	return {$: 'Just', a: a};
+};
+var $elm$core$Maybe$Nothing = {$: 'Nothing'};
+var $elm$core$String$all = _String_all;
+var $elm$core$Basics$and = _Basics_and;
+var $elm$core$Basics$append = _Utils_append;
+var $elm$json$Json$Encode$encode = _Json_encode;
+var $elm$core$String$fromInt = _String_fromNumber;
+var $elm$core$String$join = F2(
+	function (sep, chunks) {
+		return A2(
+			_String_join,
+			sep,
+			_List_toArray(chunks));
+	});
+var $elm$core$String$split = F2(
+	function (sep, string) {
+		return _List_fromArray(
+			A2(_String_split, sep, string));
+	});
+var $elm$json$Json$Decode$indent = function (str) {
+	return A2(
+		$elm$core$String$join,
+		'\n    ',
+		A2($elm$core$String$split, '\n', str));
+};
+var $elm$core$List$foldl = F3(
+	function (func, acc, list) {
+		foldl:
+		while (true) {
+			if (!list.b) {
+				return acc;
+			} else {
+				var x = list.a;
+				var xs = list.b;
+				var $temp$func = func,
+					$temp$acc = A2(func, x, acc),
+					$temp$list = xs;
+				func = $temp$func;
+				acc = $temp$acc;
+				list = $temp$list;
+				continue foldl;
+			}
+		}
+	});
+var $elm$core$List$length = function (xs) {
+	return A3(
+		$elm$core$List$foldl,
+		F2(
+			function (_v0, i) {
+				return i + 1;
+			}),
+		0,
+		xs);
+};
+var $elm$core$List$map2 = _List_map2;
+var $elm$core$Basics$le = _Utils_le;
+var $elm$core$Basics$sub = _Basics_sub;
+var $elm$core$List$rangeHelp = F3(
+	function (lo, hi, list) {
+		rangeHelp:
+		while (true) {
+			if (_Utils_cmp(lo, hi) < 1) {
+				var $temp$lo = lo,
+					$temp$hi = hi - 1,
+					$temp$list = A2($elm$core$List$cons, hi, list);
+				lo = $temp$lo;
+				hi = $temp$hi;
+				list = $temp$list;
+				continue rangeHelp;
+			} else {
+				return list;
+			}
+		}
+	});
+var $elm$core$List$range = F2(
+	function (lo, hi) {
+		return A3($elm$core$List$rangeHelp, lo, hi, _List_Nil);
+	});
+var $elm$core$List$indexedMap = F2(
+	function (f, xs) {
+		return A3(
+			$elm$core$List$map2,
+			f,
+			A2(
+				$elm$core$List$range,
+				0,
+				$elm$core$List$length(xs) - 1),
+			xs);
+	});
+var $elm$core$Char$toCode = _Char_toCode;
+var $elm$core$Char$isLower = function (_char) {
+	var code = $elm$core$Char$toCode(_char);
+	return (97 <= code) && (code <= 122);
+};
+var $elm$core$Char$isUpper = function (_char) {
+	var code = $elm$core$Char$toCode(_char);
+	return (code <= 90) && (65 <= code);
+};
+var $elm$core$Basics$or = _Basics_or;
+var $elm$core$Char$isAlpha = function (_char) {
+	return $elm$core$Char$isLower(_char) || $elm$core$Char$isUpper(_char);
+};
+var $elm$core$Char$isDigit = function (_char) {
+	var code = $elm$core$Char$toCode(_char);
+	return (code <= 57) && (48 <= code);
+};
+var $elm$core$Char$isAlphaNum = function (_char) {
+	return $elm$core$Char$isLower(_char) || ($elm$core$Char$isUpper(_char) || $elm$core$Char$isDigit(_char));
+};
+var $elm$core$List$reverse = function (list) {
+	return A3($elm$core$List$foldl, $elm$core$List$cons, _List_Nil, list);
+};
+var $elm$core$String$uncons = _String_uncons;
+var $elm$json$Json$Decode$errorOneOf = F2(
+	function (i, error) {
+		return '\n\n(' + ($elm$core$String$fromInt(i + 1) + (') ' + $elm$json$Json$Decode$indent(
+			$elm$json$Json$Decode$errorToString(error))));
+	});
+var $elm$json$Json$Decode$errorToString = function (error) {
+	return A2($elm$json$Json$Decode$errorToStringHelp, error, _List_Nil);
+};
+var $elm$json$Json$Decode$errorToStringHelp = F2(
+	function (error, context) {
+		errorToStringHelp:
+		while (true) {
+			switch (error.$) {
+				case 'Field':
+					var f = error.a;
+					var err = error.b;
+					var isSimple = function () {
+						var _v1 = $elm$core$String$uncons(f);
+						if (_v1.$ === 'Nothing') {
+							return false;
+						} else {
+							var _v2 = _v1.a;
+							var _char = _v2.a;
+							var rest = _v2.b;
+							return $elm$core$Char$isAlpha(_char) && A2($elm$core$String$all, $elm$core$Char$isAlphaNum, rest);
+						}
+					}();
+					var fieldName = isSimple ? ('.' + f) : ('[\'' + (f + '\']'));
+					var $temp$error = err,
+						$temp$context = A2($elm$core$List$cons, fieldName, context);
+					error = $temp$error;
+					context = $temp$context;
+					continue errorToStringHelp;
+				case 'Index':
+					var i = error.a;
+					var err = error.b;
+					var indexName = '[' + ($elm$core$String$fromInt(i) + ']');
+					var $temp$error = err,
+						$temp$context = A2($elm$core$List$cons, indexName, context);
+					error = $temp$error;
+					context = $temp$context;
+					continue errorToStringHelp;
+				case 'OneOf':
+					var errors = error.a;
+					if (!errors.b) {
+						return 'Ran into a Json.Decode.oneOf with no possibilities' + function () {
+							if (!context.b) {
+								return '!';
+							} else {
+								return ' at json' + A2(
+									$elm$core$String$join,
+									'',
+									$elm$core$List$reverse(context));
+							}
+						}();
+					} else {
+						if (!errors.b.b) {
+							var err = errors.a;
+							var $temp$error = err,
+								$temp$context = context;
+							error = $temp$error;
+							context = $temp$context;
+							continue errorToStringHelp;
+						} else {
+							var starter = function () {
+								if (!context.b) {
+									return 'Json.Decode.oneOf';
+								} else {
+									return 'The Json.Decode.oneOf at json' + A2(
+										$elm$core$String$join,
+										'',
+										$elm$core$List$reverse(context));
+								}
+							}();
+							var introduction = starter + (' failed in the following ' + ($elm$core$String$fromInt(
+								$elm$core$List$length(errors)) + ' ways:'));
+							return A2(
+								$elm$core$String$join,
+								'\n\n',
+								A2(
+									$elm$core$List$cons,
+									introduction,
+									A2($elm$core$List$indexedMap, $elm$json$Json$Decode$errorOneOf, errors)));
+						}
+					}
+				default:
+					var msg = error.a;
+					var json = error.b;
+					var introduction = function () {
+						if (!context.b) {
+							return 'Problem with the given value:\n\n';
+						} else {
+							return 'Problem with the value at json' + (A2(
+								$elm$core$String$join,
+								'',
+								$elm$core$List$reverse(context)) + ':\n\n    ');
+						}
+					}();
+					return introduction + ($elm$json$Json$Decode$indent(
+						A2($elm$json$Json$Encode$encode, 4, json)) + ('\n\n' + msg));
+			}
+		}
+	});
+var $elm$core$Array$branchFactor = 32;
+var $elm$core$Array$Array_elm_builtin = F4(
+	function (a, b, c, d) {
+		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
+	});
+var $elm$core$Elm$JsArray$empty = _JsArray_empty;
+var $elm$core$Basics$ceiling = _Basics_ceiling;
+var $elm$core$Basics$fdiv = _Basics_fdiv;
+var $elm$core$Basics$logBase = F2(
+	function (base, number) {
+		return _Basics_log(number) / _Basics_log(base);
+	});
+var $elm$core$Basics$toFloat = _Basics_toFloat;
+var $elm$core$Array$shiftStep = $elm$core$Basics$ceiling(
+	A2($elm$core$Basics$logBase, 2, $elm$core$Array$branchFactor));
+var $elm$core$Array$empty = A4($elm$core$Array$Array_elm_builtin, 0, $elm$core$Array$shiftStep, $elm$core$Elm$JsArray$empty, $elm$core$Elm$JsArray$empty);
+var $elm$core$Elm$JsArray$initialize = _JsArray_initialize;
+var $elm$core$Array$Leaf = function (a) {
+	return {$: 'Leaf', a: a};
+};
+var $elm$core$Basics$apL = F2(
+	function (f, x) {
+		return f(x);
+	});
+var $elm$core$Basics$eq = _Utils_equal;
+var $elm$core$Basics$floor = _Basics_floor;
+var $elm$core$Elm$JsArray$length = _JsArray_length;
+var $elm$core$Basics$gt = _Utils_gt;
+var $elm$core$Basics$max = F2(
+	function (x, y) {
+		return (_Utils_cmp(x, y) > 0) ? x : y;
+	});
+var $elm$core$Basics$mul = _Basics_mul;
+var $elm$core$Array$SubTree = function (a) {
+	return {$: 'SubTree', a: a};
+};
+var $elm$core$Elm$JsArray$initializeFromList = _JsArray_initializeFromList;
+var $elm$core$Array$compressNodes = F2(
+	function (nodes, acc) {
+		compressNodes:
+		while (true) {
+			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, nodes);
+			var node = _v0.a;
+			var remainingNodes = _v0.b;
+			var newAcc = A2(
+				$elm$core$List$cons,
+				$elm$core$Array$SubTree(node),
+				acc);
+			if (!remainingNodes.b) {
+				return $elm$core$List$reverse(newAcc);
+			} else {
+				var $temp$nodes = remainingNodes,
+					$temp$acc = newAcc;
+				nodes = $temp$nodes;
+				acc = $temp$acc;
+				continue compressNodes;
+			}
+		}
+	});
+var $elm$core$Tuple$first = function (_v0) {
+	var x = _v0.a;
+	return x;
+};
+var $elm$core$Array$treeFromBuilder = F2(
+	function (nodeList, nodeListSize) {
+		treeFromBuilder:
+		while (true) {
+			var newNodeSize = $elm$core$Basics$ceiling(nodeListSize / $elm$core$Array$branchFactor);
+			if (newNodeSize === 1) {
+				return A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, nodeList).a;
+			} else {
+				var $temp$nodeList = A2($elm$core$Array$compressNodes, nodeList, _List_Nil),
+					$temp$nodeListSize = newNodeSize;
+				nodeList = $temp$nodeList;
+				nodeListSize = $temp$nodeListSize;
+				continue treeFromBuilder;
+			}
+		}
+	});
+var $elm$core$Array$builderToArray = F2(
+	function (reverseNodeList, builder) {
+		if (!builder.nodeListSize) {
+			return A4(
+				$elm$core$Array$Array_elm_builtin,
+				$elm$core$Elm$JsArray$length(builder.tail),
+				$elm$core$Array$shiftStep,
+				$elm$core$Elm$JsArray$empty,
+				builder.tail);
+		} else {
+			var treeLen = builder.nodeListSize * $elm$core$Array$branchFactor;
+			var depth = $elm$core$Basics$floor(
+				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
+			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.nodeList) : builder.nodeList;
+			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.nodeListSize);
+			return A4(
+				$elm$core$Array$Array_elm_builtin,
+				$elm$core$Elm$JsArray$length(builder.tail) + treeLen,
+				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
+				tree,
+				builder.tail);
+		}
+	});
+var $elm$core$Basics$idiv = _Basics_idiv;
+var $elm$core$Basics$lt = _Utils_lt;
+var $elm$core$Array$initializeHelp = F5(
+	function (fn, fromIndex, len, nodeList, tail) {
+		initializeHelp:
+		while (true) {
+			if (fromIndex < 0) {
+				return A2(
+					$elm$core$Array$builderToArray,
+					false,
+					{nodeList: nodeList, nodeListSize: (len / $elm$core$Array$branchFactor) | 0, tail: tail});
+			} else {
+				var leaf = $elm$core$Array$Leaf(
+					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
+				var $temp$fn = fn,
+					$temp$fromIndex = fromIndex - $elm$core$Array$branchFactor,
+					$temp$len = len,
+					$temp$nodeList = A2($elm$core$List$cons, leaf, nodeList),
+					$temp$tail = tail;
+				fn = $temp$fn;
+				fromIndex = $temp$fromIndex;
+				len = $temp$len;
+				nodeList = $temp$nodeList;
+				tail = $temp$tail;
+				continue initializeHelp;
+			}
+		}
+	});
+var $elm$core$Basics$remainderBy = _Basics_remainderBy;
+var $elm$core$Array$initialize = F2(
+	function (len, fn) {
+		if (len <= 0) {
+			return $elm$core$Array$empty;
+		} else {
+			var tailLen = len % $elm$core$Array$branchFactor;
+			var tail = A3($elm$core$Elm$JsArray$initialize, tailLen, len - tailLen, fn);
+			var initialFromIndex = (len - tailLen) - $elm$core$Array$branchFactor;
+			return A5($elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
+		}
+	});
+var $elm$core$Basics$True = {$: 'True'};
+var $elm$core$Result$isOk = function (result) {
+	if (result.$ === 'Ok') {
+		return true;
+	} else {
+		return false;
+	}
+};
+var $elm$json$Json$Decode$map = _Json_map1;
+var $elm$json$Json$Decode$map2 = _Json_map2;
+var $elm$json$Json$Decode$succeed = _Json_succeed;
+var $elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
+	switch (handler.$) {
+		case 'Normal':
+			return 0;
+		case 'MayStopPropagation':
+			return 1;
+		case 'MayPreventDefault':
+			return 2;
+		default:
+			return 3;
+	}
+};
+var $elm$virtual_dom$VirtualDom$attribute = F2(
+	function (key, value) {
+		return A2(
+			_VirtualDom_attribute,
+			_VirtualDom_noOnOrFormAction(key),
+			_VirtualDom_noJavaScriptOrHtmlUri(value));
+	});
+var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $dtwrks$elm_book$ElmBook$ThemeOptions$background = F2(
 	function (background_, theme) {
 		return _Utils_update(
@@ -4751,12 +5165,10 @@ var $dtwrks$elm_book$ElmBook$ThemeOptions$background = F2(
 			{background: background_});
 	});
 var $author$project$Page$Introduction$extensionFunctions = '\r\n\r\n"Vanilla" Leaf  does not come with any predefined functions. We suggest to always include at least the `Leaf.Core` package. This package contains the most essential functions: `equal`, `if`, `isBool`, `isExtension`, `isFloat`, `isFunction`, `isInt`, `isList`, `isNull`, `isObject`, `isString` and `notEqual`. \r\n\r\nAny type specific functions, like the `append` function, must be implemented by yourself. \r\nThis has practical reasons: Maintaining a language and libraries for it is a lot of work. \r\nIt\'s therefore better to split these more specific functions off into their own projects.\r\n\r\nThis way we can allow the naming convention `Package::functionName`. \r\n\r\n<component with-label="ExtensionFunction" />\r\n\r\nYou can apply the naming convention by using `Leaf.addPackage`.\r\n\r\n### InputVariable\r\n\r\n![Syntax for input variables](https://orasund.github.io/leaf-lang/syntax/inputVariable.svg)';
-var $elm$core$Basics$append = _Utils_append;
 var $author$project$Data$Test$Introduction$contextSensitiveString = '\r\n    let\r\n        context =\r\n            [ StringVal "World" |> Leaf.field "name"\r\n            , (\\s2 s1 -> StringVal (s1 ++ s2))\r\n                |> Leaf.binaryFun (Leaf.typed Leaf.asString)\r\n                    (Leaf.typed Leaf.asString)\r\n                |> Leaf.field "append"\r\n            ]\r\n                |> Dict.fromList\r\n                |> Leaf.addExposed Core.package\r\n    in\r\n    "\\"Hello \\".append name"\r\n        |> Leaf.run context\r\n    ';
 var $author$project$Data$Test$Introduction$helloWorldString = '\r\n    "\\"Hello World\\""\r\n        |> Leaf.run Dict.empty\r\n';
 var $author$project$Page$Introduction$helloWorld = '\r\n\r\nA "Hello World" script in Leaf is as simple as\r\n\r\n<component with-label="HelloWorld" />\r\n\r\nTo run this script in Elm you need to call `Leaf.run`.\r\n\r\n' + ($author$project$Data$Test$Introduction$helloWorldString + ('\r\nThe first argument of `Leaf.run` is the "context". \r\nYou can pass values from Elm to Leaf through the context.\r\n' + ($author$project$Data$Test$Introduction$contextSensitiveString + '\r\nYour Leaf script may now use the variable `name`, the extension function `append` and all functions contained in `Core.package`.\r\n\r\n<component with-label="Append" />\r\n\r\nYou can use the pipe operator `.` to pass a value from one function to the next.\r\n\r\n<component with-label="PipeOp" />')));
 var $author$project$Page$Introduction$introduction = '\r\nLeaf is a multi paradigm scripting language for Elm. It is designed to be extendable to fit your needs.\r\n\r\nLeaf is\r\n* dynamically typed\r\n* extendable (by normal Elm functions)\r\n* based on Lua with a few features taken from Rust\r\n* context sensitive (similar to Ports in Elm)\r\n* small (50KB of pure Elm code)\r\n\r\nA Leaf block is composed out of a list of statements, followed by an expression (the return value).\r\n\r\n### Block\r\n\r\n![Syntax for Blocks](https://orasund.github.io/leaf-lang/syntax/block.svg)\r\n\r\n### Spaces\r\n\r\n![Syntax for Spaces](https://orasund.github.io/leaf-lang/syntax/spaces.svg)\r\n';
-var $elm$core$Maybe$Nothing = {$: 'Nothing'};
 var $author$project$Data$Shared$OnChange = F2(
 	function (a, b) {
 		return {$: 'OnChange', a: a, b: b};
@@ -4770,7 +5182,6 @@ var $elm$core$Basics$identity = function (x) {
 var $dtwrks$elm_book$ElmBook$Internal$Chapter$ChapterBuilder = function (a) {
 	return {$: 'ChapterBuilder', a: a};
 };
-var $elm$core$Basics$True = {$: 'True'};
 var $dtwrks$elm_book$ElmBook$Internal$Chapter$ChapterOptions = function (a) {
 	return {$: 'ChapterOptions', a: a};
 };
@@ -4786,29 +5197,7 @@ var $elm$core$Basics$composeR = F3(
 		return g(
 			f(x));
 	});
-var $elm$core$Maybe$Just = function (a) {
-	return {$: 'Just', a: a};
-};
 var $elm$core$String$map = _String_map;
-var $elm$core$Basics$and = _Basics_and;
-var $elm$core$Basics$le = _Utils_le;
-var $elm$core$Char$toCode = _Char_toCode;
-var $elm$core$Char$isDigit = function (_char) {
-	var code = $elm$core$Char$toCode(_char);
-	return (code <= 57) && (48 <= code);
-};
-var $elm$core$Char$isLower = function (_char) {
-	var code = $elm$core$Char$toCode(_char);
-	return (97 <= code) && (code <= 122);
-};
-var $elm$core$Char$isUpper = function (_char) {
-	var code = $elm$core$Char$toCode(_char);
-	return (code <= 90) && (65 <= code);
-};
-var $elm$core$Basics$or = _Basics_or;
-var $elm$core$Char$isAlphaNum = function (_char) {
-	return $elm$core$Char$isLower(_char) || ($elm$core$Char$isUpper(_char) || $elm$core$Char$isDigit(_char));
-};
 var $elm$core$Char$toLower = _Char_toLower;
 var $dtwrks$elm_book$ElmBook$Internal$Helpers$toUrlSafe = function (c) {
 	return $elm$core$Char$isAlphaNum(c) ? $elm$core$Char$toLower(c) : _Utils_chr('-');
@@ -4830,31 +5219,6 @@ var $dtwrks$elm_book$ElmBook$Chapter$chapter = function (title) {
 			title: title,
 			url: '/' + $dtwrks$elm_book$ElmBook$Internal$Helpers$toSlug(title)
 		});
-};
-var $elm$core$Basics$eq = _Utils_equal;
-var $elm$core$Basics$add = _Basics_add;
-var $elm$core$List$foldl = F3(
-	function (func, acc, list) {
-		foldl:
-		while (true) {
-			if (!list.b) {
-				return acc;
-			} else {
-				var x = list.a;
-				var xs = list.b;
-				var $temp$func = func,
-					$temp$acc = A2(func, x, acc),
-					$temp$list = xs;
-				func = $temp$func;
-				acc = $temp$acc;
-				list = $temp$list;
-				continue foldl;
-			}
-		}
-	});
-var $elm$core$Basics$gt = _Utils_gt;
-var $elm$core$List$reverse = function (list) {
-	return A3($elm$core$List$foldl, $elm$core$List$cons, _List_Nil, list);
 };
 var $elm$core$List$foldrHelper = F4(
 	function (fn, acc, ctr, ls) {
@@ -5252,7 +5616,7 @@ var $author$project$Data$Test$Types$tests = $elm$core$Dict$fromList(
 			_Utils_Tuple2(
 			'FunctionValue',
 			{
-				code: '(fun hello world -> hello .append world) "Hello" \"World\"\r\n  .isFunction',
+				code: '(fun hello world -> hello .append world) "Hello" "World"\r\n  .isFunction',
 				result: $author$project$Leaf$BoolVal(true)
 			}),
 			_Utils_Tuple2(
@@ -5307,7 +5671,6 @@ var $author$project$Data$Test$tests = A2(
 	$elm$core$Dict$union,
 	$author$project$Data$Test$Types$tests,
 	A2($elm$core$Dict$union, $author$project$Data$Test$Statements$tests, $author$project$Data$Test$Introduction$tests));
-var $elm$core$Basics$False = {$: 'False'};
 var $mdgriffith$elm_ui$Internal$Model$AlignX = function (a) {
 	return {$: 'AlignX', a: a};
 };
@@ -5318,10 +5681,6 @@ var $mdgriffith$elm_ui$Internal$Model$AlignY = function (a) {
 };
 var $mdgriffith$elm_ui$Internal$Model$Top = {$: 'Top'};
 var $mdgriffith$elm_ui$Element$alignTop = $mdgriffith$elm_ui$Internal$Model$AlignY($mdgriffith$elm_ui$Internal$Model$Top);
-var $elm$core$Basics$apL = F2(
-	function (f, x) {
-		return f(x);
-	});
 var $mdgriffith$elm_ui$Internal$Model$Attr = function (a) {
 	return {$: 'Attr', a: a};
 };
@@ -5335,357 +5694,6 @@ var $mdgriffith$elm_ui$Internal$Model$Unkeyed = function (a) {
 var $mdgriffith$elm_ui$Internal$Model$AsEl = {$: 'AsEl'};
 var $mdgriffith$elm_ui$Internal$Model$asEl = $mdgriffith$elm_ui$Internal$Model$AsEl;
 var $mdgriffith$elm_ui$Internal$Style$classes = {above: 'a', active: 'atv', alignBottom: 'ab', alignCenterX: 'cx', alignCenterY: 'cy', alignContainerBottom: 'acb', alignContainerCenterX: 'accx', alignContainerCenterY: 'accy', alignContainerRight: 'acr', alignLeft: 'al', alignRight: 'ar', alignTop: 'at', alignedHorizontally: 'ah', alignedVertically: 'av', any: 's', behind: 'bh', below: 'b', bold: 'w7', borderDashed: 'bd', borderDotted: 'bdt', borderNone: 'bn', borderSolid: 'bs', capturePointerEvents: 'cpe', clip: 'cp', clipX: 'cpx', clipY: 'cpy', column: 'c', container: 'ctr', contentBottom: 'cb', contentCenterX: 'ccx', contentCenterY: 'ccy', contentLeft: 'cl', contentRight: 'cr', contentTop: 'ct', cursorPointer: 'cptr', cursorText: 'ctxt', focus: 'fcs', focusedWithin: 'focus-within', fullSize: 'fs', grid: 'g', hasBehind: 'hbh', heightContent: 'hc', heightExact: 'he', heightFill: 'hf', heightFillPortion: 'hfp', hover: 'hv', imageContainer: 'ic', inFront: 'fr', inputLabel: 'lbl', inputMultiline: 'iml', inputMultilineFiller: 'imlf', inputMultilineParent: 'imlp', inputMultilineWrapper: 'implw', inputText: 'it', italic: 'i', link: 'lnk', nearby: 'nb', noTextSelection: 'notxt', onLeft: 'ol', onRight: 'or', opaque: 'oq', overflowHidden: 'oh', page: 'pg', paragraph: 'p', passPointerEvents: 'ppe', root: 'ui', row: 'r', scrollbars: 'sb', scrollbarsX: 'sbx', scrollbarsY: 'sby', seButton: 'sbt', single: 'e', sizeByCapital: 'cap', spaceEvenly: 'sev', strike: 'sk', text: 't', textCenter: 'tc', textExtraBold: 'w8', textExtraLight: 'w2', textHeavy: 'w9', textJustify: 'tj', textJustifyAll: 'tja', textLeft: 'tl', textLight: 'w3', textMedium: 'w5', textNormalWeight: 'w4', textRight: 'tr', textSemiBold: 'w6', textThin: 'w1', textUnitalicized: 'tun', transition: 'ts', transparent: 'clr', underline: 'u', widthContent: 'wc', widthExact: 'we', widthFill: 'wf', widthFillPortion: 'wfp', wrapped: 'wrp'};
-var $elm$core$Result$Err = function (a) {
-	return {$: 'Err', a: a};
-};
-var $elm$json$Json$Decode$Failure = F2(
-	function (a, b) {
-		return {$: 'Failure', a: a, b: b};
-	});
-var $elm$json$Json$Decode$Field = F2(
-	function (a, b) {
-		return {$: 'Field', a: a, b: b};
-	});
-var $elm$json$Json$Decode$Index = F2(
-	function (a, b) {
-		return {$: 'Index', a: a, b: b};
-	});
-var $elm$core$Result$Ok = function (a) {
-	return {$: 'Ok', a: a};
-};
-var $elm$json$Json$Decode$OneOf = function (a) {
-	return {$: 'OneOf', a: a};
-};
-var $elm$core$String$all = _String_all;
-var $elm$json$Json$Encode$encode = _Json_encode;
-var $elm$core$String$fromInt = _String_fromNumber;
-var $elm$core$String$join = F2(
-	function (sep, chunks) {
-		return A2(
-			_String_join,
-			sep,
-			_List_toArray(chunks));
-	});
-var $elm$core$String$split = F2(
-	function (sep, string) {
-		return _List_fromArray(
-			A2(_String_split, sep, string));
-	});
-var $elm$json$Json$Decode$indent = function (str) {
-	return A2(
-		$elm$core$String$join,
-		'\n    ',
-		A2($elm$core$String$split, '\n', str));
-};
-var $elm$core$List$length = function (xs) {
-	return A3(
-		$elm$core$List$foldl,
-		F2(
-			function (_v0, i) {
-				return i + 1;
-			}),
-		0,
-		xs);
-};
-var $elm$core$List$map2 = _List_map2;
-var $elm$core$Basics$sub = _Basics_sub;
-var $elm$core$List$rangeHelp = F3(
-	function (lo, hi, list) {
-		rangeHelp:
-		while (true) {
-			if (_Utils_cmp(lo, hi) < 1) {
-				var $temp$lo = lo,
-					$temp$hi = hi - 1,
-					$temp$list = A2($elm$core$List$cons, hi, list);
-				lo = $temp$lo;
-				hi = $temp$hi;
-				list = $temp$list;
-				continue rangeHelp;
-			} else {
-				return list;
-			}
-		}
-	});
-var $elm$core$List$range = F2(
-	function (lo, hi) {
-		return A3($elm$core$List$rangeHelp, lo, hi, _List_Nil);
-	});
-var $elm$core$List$indexedMap = F2(
-	function (f, xs) {
-		return A3(
-			$elm$core$List$map2,
-			f,
-			A2(
-				$elm$core$List$range,
-				0,
-				$elm$core$List$length(xs) - 1),
-			xs);
-	});
-var $elm$core$Char$isAlpha = function (_char) {
-	return $elm$core$Char$isLower(_char) || $elm$core$Char$isUpper(_char);
-};
-var $elm$core$String$uncons = _String_uncons;
-var $elm$json$Json$Decode$errorOneOf = F2(
-	function (i, error) {
-		return '\n\n(' + ($elm$core$String$fromInt(i + 1) + (') ' + $elm$json$Json$Decode$indent(
-			$elm$json$Json$Decode$errorToString(error))));
-	});
-var $elm$json$Json$Decode$errorToString = function (error) {
-	return A2($elm$json$Json$Decode$errorToStringHelp, error, _List_Nil);
-};
-var $elm$json$Json$Decode$errorToStringHelp = F2(
-	function (error, context) {
-		errorToStringHelp:
-		while (true) {
-			switch (error.$) {
-				case 'Field':
-					var f = error.a;
-					var err = error.b;
-					var isSimple = function () {
-						var _v1 = $elm$core$String$uncons(f);
-						if (_v1.$ === 'Nothing') {
-							return false;
-						} else {
-							var _v2 = _v1.a;
-							var _char = _v2.a;
-							var rest = _v2.b;
-							return $elm$core$Char$isAlpha(_char) && A2($elm$core$String$all, $elm$core$Char$isAlphaNum, rest);
-						}
-					}();
-					var fieldName = isSimple ? ('.' + f) : ('[\'' + (f + '\']'));
-					var $temp$error = err,
-						$temp$context = A2($elm$core$List$cons, fieldName, context);
-					error = $temp$error;
-					context = $temp$context;
-					continue errorToStringHelp;
-				case 'Index':
-					var i = error.a;
-					var err = error.b;
-					var indexName = '[' + ($elm$core$String$fromInt(i) + ']');
-					var $temp$error = err,
-						$temp$context = A2($elm$core$List$cons, indexName, context);
-					error = $temp$error;
-					context = $temp$context;
-					continue errorToStringHelp;
-				case 'OneOf':
-					var errors = error.a;
-					if (!errors.b) {
-						return 'Ran into a Json.Decode.oneOf with no possibilities' + function () {
-							if (!context.b) {
-								return '!';
-							} else {
-								return ' at json' + A2(
-									$elm$core$String$join,
-									'',
-									$elm$core$List$reverse(context));
-							}
-						}();
-					} else {
-						if (!errors.b.b) {
-							var err = errors.a;
-							var $temp$error = err,
-								$temp$context = context;
-							error = $temp$error;
-							context = $temp$context;
-							continue errorToStringHelp;
-						} else {
-							var starter = function () {
-								if (!context.b) {
-									return 'Json.Decode.oneOf';
-								} else {
-									return 'The Json.Decode.oneOf at json' + A2(
-										$elm$core$String$join,
-										'',
-										$elm$core$List$reverse(context));
-								}
-							}();
-							var introduction = starter + (' failed in the following ' + ($elm$core$String$fromInt(
-								$elm$core$List$length(errors)) + ' ways:'));
-							return A2(
-								$elm$core$String$join,
-								'\n\n',
-								A2(
-									$elm$core$List$cons,
-									introduction,
-									A2($elm$core$List$indexedMap, $elm$json$Json$Decode$errorOneOf, errors)));
-						}
-					}
-				default:
-					var msg = error.a;
-					var json = error.b;
-					var introduction = function () {
-						if (!context.b) {
-							return 'Problem with the given value:\n\n';
-						} else {
-							return 'Problem with the value at json' + (A2(
-								$elm$core$String$join,
-								'',
-								$elm$core$List$reverse(context)) + ':\n\n    ');
-						}
-					}();
-					return introduction + ($elm$json$Json$Decode$indent(
-						A2($elm$json$Json$Encode$encode, 4, json)) + ('\n\n' + msg));
-			}
-		}
-	});
-var $elm$core$Array$branchFactor = 32;
-var $elm$core$Array$Array_elm_builtin = F4(
-	function (a, b, c, d) {
-		return {$: 'Array_elm_builtin', a: a, b: b, c: c, d: d};
-	});
-var $elm$core$Elm$JsArray$empty = _JsArray_empty;
-var $elm$core$Basics$ceiling = _Basics_ceiling;
-var $elm$core$Basics$fdiv = _Basics_fdiv;
-var $elm$core$Basics$logBase = F2(
-	function (base, number) {
-		return _Basics_log(number) / _Basics_log(base);
-	});
-var $elm$core$Basics$toFloat = _Basics_toFloat;
-var $elm$core$Array$shiftStep = $elm$core$Basics$ceiling(
-	A2($elm$core$Basics$logBase, 2, $elm$core$Array$branchFactor));
-var $elm$core$Array$empty = A4($elm$core$Array$Array_elm_builtin, 0, $elm$core$Array$shiftStep, $elm$core$Elm$JsArray$empty, $elm$core$Elm$JsArray$empty);
-var $elm$core$Elm$JsArray$initialize = _JsArray_initialize;
-var $elm$core$Array$Leaf = function (a) {
-	return {$: 'Leaf', a: a};
-};
-var $elm$core$Basics$floor = _Basics_floor;
-var $elm$core$Elm$JsArray$length = _JsArray_length;
-var $elm$core$Basics$max = F2(
-	function (x, y) {
-		return (_Utils_cmp(x, y) > 0) ? x : y;
-	});
-var $elm$core$Basics$mul = _Basics_mul;
-var $elm$core$Array$SubTree = function (a) {
-	return {$: 'SubTree', a: a};
-};
-var $elm$core$Elm$JsArray$initializeFromList = _JsArray_initializeFromList;
-var $elm$core$Array$compressNodes = F2(
-	function (nodes, acc) {
-		compressNodes:
-		while (true) {
-			var _v0 = A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, nodes);
-			var node = _v0.a;
-			var remainingNodes = _v0.b;
-			var newAcc = A2(
-				$elm$core$List$cons,
-				$elm$core$Array$SubTree(node),
-				acc);
-			if (!remainingNodes.b) {
-				return $elm$core$List$reverse(newAcc);
-			} else {
-				var $temp$nodes = remainingNodes,
-					$temp$acc = newAcc;
-				nodes = $temp$nodes;
-				acc = $temp$acc;
-				continue compressNodes;
-			}
-		}
-	});
-var $elm$core$Tuple$first = function (_v0) {
-	var x = _v0.a;
-	return x;
-};
-var $elm$core$Array$treeFromBuilder = F2(
-	function (nodeList, nodeListSize) {
-		treeFromBuilder:
-		while (true) {
-			var newNodeSize = $elm$core$Basics$ceiling(nodeListSize / $elm$core$Array$branchFactor);
-			if (newNodeSize === 1) {
-				return A2($elm$core$Elm$JsArray$initializeFromList, $elm$core$Array$branchFactor, nodeList).a;
-			} else {
-				var $temp$nodeList = A2($elm$core$Array$compressNodes, nodeList, _List_Nil),
-					$temp$nodeListSize = newNodeSize;
-				nodeList = $temp$nodeList;
-				nodeListSize = $temp$nodeListSize;
-				continue treeFromBuilder;
-			}
-		}
-	});
-var $elm$core$Array$builderToArray = F2(
-	function (reverseNodeList, builder) {
-		if (!builder.nodeListSize) {
-			return A4(
-				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.tail),
-				$elm$core$Array$shiftStep,
-				$elm$core$Elm$JsArray$empty,
-				builder.tail);
-		} else {
-			var treeLen = builder.nodeListSize * $elm$core$Array$branchFactor;
-			var depth = $elm$core$Basics$floor(
-				A2($elm$core$Basics$logBase, $elm$core$Array$branchFactor, treeLen - 1));
-			var correctNodeList = reverseNodeList ? $elm$core$List$reverse(builder.nodeList) : builder.nodeList;
-			var tree = A2($elm$core$Array$treeFromBuilder, correctNodeList, builder.nodeListSize);
-			return A4(
-				$elm$core$Array$Array_elm_builtin,
-				$elm$core$Elm$JsArray$length(builder.tail) + treeLen,
-				A2($elm$core$Basics$max, 5, depth * $elm$core$Array$shiftStep),
-				tree,
-				builder.tail);
-		}
-	});
-var $elm$core$Basics$idiv = _Basics_idiv;
-var $elm$core$Basics$lt = _Utils_lt;
-var $elm$core$Array$initializeHelp = F5(
-	function (fn, fromIndex, len, nodeList, tail) {
-		initializeHelp:
-		while (true) {
-			if (fromIndex < 0) {
-				return A2(
-					$elm$core$Array$builderToArray,
-					false,
-					{nodeList: nodeList, nodeListSize: (len / $elm$core$Array$branchFactor) | 0, tail: tail});
-			} else {
-				var leaf = $elm$core$Array$Leaf(
-					A3($elm$core$Elm$JsArray$initialize, $elm$core$Array$branchFactor, fromIndex, fn));
-				var $temp$fn = fn,
-					$temp$fromIndex = fromIndex - $elm$core$Array$branchFactor,
-					$temp$len = len,
-					$temp$nodeList = A2($elm$core$List$cons, leaf, nodeList),
-					$temp$tail = tail;
-				fn = $temp$fn;
-				fromIndex = $temp$fromIndex;
-				len = $temp$len;
-				nodeList = $temp$nodeList;
-				tail = $temp$tail;
-				continue initializeHelp;
-			}
-		}
-	});
-var $elm$core$Basics$remainderBy = _Basics_remainderBy;
-var $elm$core$Array$initialize = F2(
-	function (len, fn) {
-		if (len <= 0) {
-			return $elm$core$Array$empty;
-		} else {
-			var tailLen = len % $elm$core$Array$branchFactor;
-			var tail = A3($elm$core$Elm$JsArray$initialize, tailLen, len - tailLen, fn);
-			var initialFromIndex = (len - tailLen) - $elm$core$Array$branchFactor;
-			return A5($elm$core$Array$initializeHelp, fn, initialFromIndex, len, _List_Nil, tail);
-		}
-	});
-var $elm$core$Result$isOk = function (result) {
-	if (result.$ === 'Ok') {
-		return true;
-	} else {
-		return false;
-	}
-};
-var $elm$json$Json$Decode$map = _Json_map1;
-var $elm$json$Json$Decode$map2 = _Json_map2;
-var $elm$json$Json$Decode$succeed = _Json_succeed;
-var $elm$virtual_dom$VirtualDom$toHandlerInt = function (handler) {
-	switch (handler.$) {
-		case 'Normal':
-			return 0;
-		case 'MayStopPropagation':
-			return 1;
-		case 'MayPreventDefault':
-			return 2;
-		default:
-			return 3;
-	}
-};
 var $elm$json$Json$Encode$bool = _Json_wrap;
 var $elm$html$Html$Attributes$boolProperty = F2(
 	function (key, bool) {
@@ -9960,13 +9968,6 @@ var $mdgriffith$elm_ui$Internal$Model$alignYName = function (align) {
 			return $mdgriffith$elm_ui$Internal$Style$classes.alignedVertically + (' ' + $mdgriffith$elm_ui$Internal$Style$classes.alignCenterY);
 	}
 };
-var $elm$virtual_dom$VirtualDom$attribute = F2(
-	function (key, value) {
-		return A2(
-			_VirtualDom_attribute,
-			_VirtualDom_noOnOrFormAction(key),
-			_VirtualDom_noJavaScriptOrHtmlUri(value));
-	});
 var $mdgriffith$elm_ui$Internal$Model$FullTransform = F4(
 	function (a, b, c, d) {
 		return {$: 'FullTransform', a: a, b: b, c: c, d: d};
@@ -11592,7 +11593,6 @@ var $mdgriffith$elm_ui$Element$Input$applyLabel = F3(
 			}
 		}
 	});
-var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
 var $mdgriffith$elm_ui$Element$Input$autofill = A2(
 	$elm$core$Basics$composeL,
 	$mdgriffith$elm_ui$Internal$Model$Attr,
@@ -15912,7 +15912,8 @@ var $author$project$Page$Types$int = 'Leaf has a integers same as Elm. Though it
 var $author$project$Page$Types$introduction = '\r\nLeaf is dynamically typed (just like JavaScript), this means values have types, but variables don\'t.\r\n\r\n<component with-label="DynamicallyTyped" />\r\n\r\n### Expression\r\n\r\n![Syntax for Expressions](https://orasund.github.io/leaf-lang/syntax/expression.svg)\r\n\r\n### Constructor\r\n\r\n![Syntax for Expressions](https://orasund.github.io/leaf-lang/syntax/constructor.svg)\r\n';
 var $author$project$Page$Types$list = 'Lists can have any size and any content. You think of it as a resizable tuple in Elm.\r\n\r\n<component with-label="ListValue" />\r\n\r\nLists do no allow a random access, so therefore it takes linear time to get or update an entry.\r\n\r\n### List\r\n\r\n![Syntax for Lists](https://orasund.github.io/leaf-lang/syntax/list.svg)';
 var $author$project$Page$Types$null = '\r\nNull is a type with a single value (itself). It behaves the same as `()` in Elm.\r\n\r\n<component with-label="NullValue" />\r\n\r\nYou can use `null` similar to `Nothing`.\r\n\r\n<component with-label="NullableValue" />\r\n\r\nIn our definition of `append` we have specified that we only allow strings. So, if we try appending `null`, we get a runtime error.\r\n\r\n### Null\r\n\r\n![Syntax for Null](https://orasund.github.io/leaf-lang/syntax/null.svg)';
-var $author$project$Page$Types$object = 'Objects are the same as objects in javascript. They contain key-value pairs that may be inserted or removed. Behind the scenes its just a Elm Dict of type `Leaf.Value`.\r\n\r\n<component with-label="ObjValue" />\r\n\r\n`{}` is the empty object, note that it looks like a block without content.\r\n\r\n<component with-label="EmptyObj" />\r\n\r\n### Object\r\n\r\n![Syntax for objects](https://orasund.github.io/leaf-lang/syntax/object.svg)';
+var $author$project$Data$Test$Types$objectGetterString = 'let\r\n    objectPackage =\r\n      [ (\\string obj ->\r\n          obj\r\n          |> Dict.get string\r\n          |> Maybe.withDefault NullVal \r\n        )\r\n          |> Leaf.binaryFun (Leaf.typed Leaf.asString)\r\n              (Leaf.typed Leaf.asObject)\r\n          |> Leaf.field "get"\r\n      ]\r\n          |> Dict.fromList\r\n\r\n    context =\r\n        Core.package\r\n          |> Leaf.addPackage "Object" objectPackage\r\nin\r\n"{ string : \\"Hello World\\"} .Object::get \\"string\\""\r\n    |> Leaf.run context';
+var $author$project$Page$Types$object = 'Objects are the same as objects in javascript. They contain key-value pairs that may be inserted or removed. Behind the scenes its just a Elm Dict of type `Leaf.Value`.\r\n\r\n<component with-label="ObjValue" />\r\n\r\n`{}` is the empty object, note that it looks like a block without content.\r\n\r\n<component with-label="EmptyObj" />\r\n\r\nTo get the value inside an object you have to define your own extension function.\r\n\r\n```\r\n' + ($author$project$Data$Test$Types$objectGetterString + '\r\n```\r\n\r\n### Object\r\n\r\n![Syntax for objects](https://orasund.github.io/leaf-lang/syntax/object.svg)');
 var $author$project$Page$Types$string = 'Strings are the same as Strings in Elm. Leaf has neither exceptions nor a result type. Instead you can define an error variable that contains your error message.\r\n\r\n<component with-label="StringValue" />\r\n\r\nYou can check the value of  `error` after the script has run.\r\n``` elm\r\nlet\r\n  (value,context) =\r\n    script\r\n      |> Leaf.run Core.package\r\nin\r\ncase context |> Dict.get "error |> Maybe.withDefault NullVal of\r\n  NullVal ->\r\n    Ok value\r\n  errVal ->\r\n    Err errVal\r\n```\r\n\r\n### String\r\n\r\n![Syntax for Strings](https://orasund.github.io/leaf-lang/syntax/string.svg)';
 var $author$project$Page$Types$chapter = _Utils_Tuple2(
 	'Expressions',
@@ -16318,6 +16319,7 @@ var $dtwrks$elm_book$ElmBook$ThemeOptions$navBackground = F2(
 			theme,
 			{navBackground: v});
 	});
+var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
 var $dtwrks$elm_book$ElmBook$ThemeOptions$subtitle = F2(
 	function (subtitle_, theme) {
 		return _Utils_update(
@@ -29567,7 +29569,6 @@ var $dtwrks$elm_book$ElmBook$UI$Search$view = function (props) {
 				_List_Nil)
 			]));
 };
-var $elm$html$Html$node = $elm$virtual_dom$VirtualDom$node;
 var $dtwrks$elm_book$ElmBook$UI$Helpers$css_ = function (x) {
 	return A3(
 		$elm$html$Html$node,
@@ -30121,7 +30122,31 @@ var $author$project$Main$main = A2(
 					]),
 				A2(
 					$dtwrks$elm_book$ElmBook$Custom$customBook,
-					$mdgriffith$elm_ui$Element$layout(_List_Nil),
+					function (elm) {
+						return A2(
+							$mdgriffith$elm_ui$Element$layout,
+							_List_Nil,
+							A2(
+								$mdgriffith$elm_ui$Element$column,
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$width($mdgriffith$elm_ui$Element$fill)
+									]),
+								_List_fromArray(
+									[
+										$mdgriffith$elm_ui$Element$html(
+										A3(
+											$elm$html$Html$node,
+											'meta',
+											_List_fromArray(
+												[
+													A2($elm$html$Html$Attributes$attribute, 'name', 'viewport'),
+													A2($elm$html$Html$Attributes$attribute, 'content', 'width=device-width, initial-scale=1.0')
+												]),
+											_List_Nil)),
+										elm
+									])));
+					},
 					'Leaf')))));
 _Platform_export({'Main':{'init':$author$project$Main$main(
 	$elm$json$Json$Decode$succeed(_Utils_Tuple0))(0)}});}(this));

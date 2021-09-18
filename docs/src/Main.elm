@@ -33,9 +33,23 @@ header =
         ]
         |> Element.html
 
+
 main : Book Model
 main =
-    ElmBook.Custom.customBook (Element.layout []) "Leaf"
+    ElmBook.Custom.customBook
+        (\elm ->
+            [ Html.node "meta"
+                [ Attributes.attribute "name" "viewport"
+                , Attributes.attribute "content" "width=device-width, initial-scale=1.0"
+                ]
+                []
+                |> Element.html
+            , elm
+            ]
+                |> Element.column [ Element.width Element.fill ]
+                |> Element.layout []
+        )
+        "Leaf"
         |> ElmBook.withStatefulOptions
             [ StatefulOptions.initialState Shared.init
             ]
