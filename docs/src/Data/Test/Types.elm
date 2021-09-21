@@ -91,9 +91,8 @@ out"""
         }
       )
     , ( "FunctionValue"
-      , { code = """(fun hello world -> hello .append world) "Hello" "World"
-  .isFunction"""
-        , result = BoolVal True
+      , { code = """(fun a b -> a .append b) "Hello " "World\""""
+        , result = StringVal "Hello World"
         }
       )
     , ( "MutFunValue"

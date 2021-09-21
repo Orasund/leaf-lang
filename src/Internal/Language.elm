@@ -1,5 +1,5 @@
 module Internal.Language exposing
-    ( Closure
+    ( Block
     , Exp(..)
     , Statement(..)
     , Value(..)
@@ -30,7 +30,7 @@ type Exp
     | ListExp (List Exp)
     | ObjectExp (Dict String Exp)
     | FunctionExp (Maybe String) Exp
-    | ClosureExp Closure
+    | BlockExp Block
     | Apply Exp Exp
 
 
@@ -40,5 +40,5 @@ type Statement
     | Set String Exp
 
 
-type alias Closure =
+type alias Block =
     { statements : List Statement, return : Exp }

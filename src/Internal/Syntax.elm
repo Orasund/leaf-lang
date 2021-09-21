@@ -1,7 +1,7 @@
 module Internal.Syntax exposing (parse)
 
 import Dict exposing (Dict)
-import Internal.Language exposing (Closure, Exp(..), Statement(..))
+import Internal.Language exposing (Block, Exp(..), Statement(..))
 import Internal.Util as Util
 import Parser exposing ((|.), (|=), Nestable(..), Parser, Step(..), Trailing(..))
 import Set exposing (Set)
@@ -211,7 +211,7 @@ functionExp =
         |> Parser.andThen
             (\a ->
                 Parser.succeed (buildFunction a)
-                    |= Parser.loop [ a ] functionHelp
+                    |= Parser.loop [] functionHelp
                     |. Parser.spaces
                     |. Parser.keyword "->"
                     |. Parser.spaces
@@ -232,10 +232,10 @@ singleExp =
             , parseNumber
             , Parser.lazy (\_ -> parseList) |> Parser.map ListExp
             , Parser.backtrackable <|
-                Parser.succeed ClosureExp
+                Parser.succeed BlockExp
                     |. Parser.symbol "("
                     |. Parser.spaces
-                    |= Parser.lazy (\_ -> parseClosure)
+                    |= Parser.lazy (\_ -> parseBlock)
                     |. Parser.spaces
                     |. Parser.symbol ")"
             , Parser.lazy (\_ -> parseObject) |> Parser.map ObjectExp
@@ -341,10 +341,10 @@ parseStatement =
         ]
 
 
-parseClosure : Parser Closure
-parseClosure =
+parseBlock : Parser Block
+parseBlock =
     let
-        statementsHelp : List Statement -> Parser (Step (List Statement) Closure)
+        statementsHelp : List Statement -> Parser (Step (List Statement) Block)
         statementsHelp revStmts =
             Parser.succeed identity
                 |. comment
@@ -367,11 +367,11 @@ parseClosure =
     Parser.loop [] statementsHelp
 
 
-parse : String -> Result String Closure
+parse : String -> Result String Block
 parse =
     Parser.run
         (Parser.succeed identity
-            |= parseClosure
+            |= parseBlock
             |. Parser.spaces
             |. Parser.end
         )
