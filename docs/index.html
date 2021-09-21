@@ -13869,7 +13869,6 @@ var $author$project$Data$Test$context = A2(
 						})))
 			])));
 var $author$project$Internal$Semantics$ReadWrite = {$: 'ReadWrite'};
-var $elm$core$Debug$log = _Debug_log;
 var $author$project$Internal$Language$Apply = F2(
 	function (a, b) {
 		return {$: 'Apply', a: a, b: b};
@@ -13969,145 +13968,139 @@ var $author$project$Internal$Semantics$evalBlock = F2(
 	});
 var $author$project$Internal$Semantics$evalExp = F2(
 	function (e, context) {
-		return A2(
-			$elm$core$Debug$log,
-			'result',
-			function () {
-				var _v4 = A2($elm$core$Debug$log, 'input', e);
-				switch (_v4.$) {
-					case 'Variable':
-						var string = _v4.a;
-						return A2(
-							$elm$core$Maybe$withDefault,
-							$elm$core$Result$Err('Can\'t find variable ' + string),
-							A2(
-								$elm$core$Maybe$map,
-								A2(
-									$elm$core$Basics$composeR,
-									function ($) {
-										return $.value;
-									},
-									$elm$core$Result$Ok),
-								A2($elm$core$Dict$get, string, context)));
-					case 'NullExp':
-						return $elm$core$Result$Ok($author$project$Internal$Language$NullVal);
-					case 'StringExp':
-						var string = _v4.a;
-						return $elm$core$Result$Ok(
-							$author$project$Internal$Language$StringVal(string));
-					case 'BoolExp':
-						var bool = _v4.a;
-						return $elm$core$Result$Ok(
-							$author$project$Internal$Language$BoolVal(bool));
-					case 'IntExp':
-						var n = _v4.a;
-						return $elm$core$Result$Ok(
-							$author$project$Internal$Language$IntVal(n));
-					case 'FloatExp':
-						var n = _v4.a;
-						return $elm$core$Result$Ok(
-							$author$project$Internal$Language$FloatVal(n));
-					case 'ListExp':
-						var list = _v4.a;
-						return A2(
-							$elm$core$Result$map,
-							A2($elm$core$Basics$composeR, $elm$core$List$reverse, $author$project$Internal$Language$ListVal),
-							A3(
-								$elm$core$List$foldl,
-								function (a) {
-									return $elm$core$Result$andThen(
-										function (l) {
-											return A2(
-												$elm$core$Result$map,
-												function (b) {
-													return A2($elm$core$List$cons, b, l);
-												},
-												A2($author$project$Internal$Semantics$evalExp, a, context));
-										});
-								},
-								$elm$core$Result$Ok(_List_Nil),
-								list));
-					case 'ObjectExp':
-						var dict = _v4.a;
-						return A2(
-							$elm$core$Result$map,
-							$author$project$Internal$Language$ObjectVal,
-							A3(
-								$elm$core$Dict$foldl,
-								F2(
-									function (k, a) {
-										return $elm$core$Result$andThen(
-											function (l) {
-												return A2(
-													$elm$core$Result$map,
-													function (b) {
-														return A3($elm$core$Dict$insert, k, b, l);
-													},
-													A2($author$project$Internal$Semantics$evalExp, a, context));
-											});
-									}),
-								$elm$core$Result$Ok($elm$core$Dict$empty),
-								dict));
-					case 'FunctionExp':
-						var maybeString = _v4.a;
-						var exp = _v4.b;
-						return $elm$core$Result$Ok(
-							A2($author$project$Internal$Language$FunctionVal, maybeString, exp));
-					case 'BlockExp':
-						var block = _v4.a;
-						return A2(
-							$elm$core$Result$map,
-							$elm$core$Tuple$first,
-							A2(
-								$author$project$Internal$Semantics$evalBlock,
-								A2($elm$core$Debug$log, 'block', block),
-								A2(
-									$elm$core$Dict$map,
-									F2(
-										function (_v5, v) {
-											return _Utils_update(
-												v,
-												{access: $author$project$Internal$Semantics$Read});
-										}),
-									A2($elm$core$Debug$log, 'context', context))));
-					default:
-						var exp1 = _v4.a;
-						var exp2 = _v4.b;
-						return A2(
-							$elm$core$Result$andThen,
-							function (v2) {
-								switch (v2.$) {
-									case 'FunctionVal':
-										var string = v2.a;
-										var exp3 = v2.b;
-										return A2(
-											$author$project$Internal$Semantics$evalExp,
-											A2(
-												$elm$core$Maybe$withDefault,
-												exp3,
-												A2(
-													$elm$core$Maybe$map,
-													function (s) {
-														return A3($author$project$Internal$Semantics$substitute, s, exp1, exp3);
-													},
-													string)),
-											context);
-									case 'ExtensionVal':
-										var fun = v2.a;
-										return A2(
-											$elm$core$Result$andThen,
-											function (v1) {
-												return fun(v1);
-											},
-											A2($author$project$Internal$Semantics$evalExp, exp1, context));
-									default:
-										return $elm$core$Result$Err(
-											'Can\'t apply a value to ' + $author$project$Internal$Util$valueToString(v2));
-								}
+		switch (e.$) {
+			case 'Variable':
+				var string = e.a;
+				return A2(
+					$elm$core$Maybe$withDefault,
+					$elm$core$Result$Err('Can\'t find variable ' + string),
+					A2(
+						$elm$core$Maybe$map,
+						A2(
+							$elm$core$Basics$composeR,
+							function ($) {
+								return $.value;
 							},
-							A2($author$project$Internal$Semantics$evalExp, exp2, context));
-				}
-			}());
+							$elm$core$Result$Ok),
+						A2($elm$core$Dict$get, string, context)));
+			case 'NullExp':
+				return $elm$core$Result$Ok($author$project$Internal$Language$NullVal);
+			case 'StringExp':
+				var string = e.a;
+				return $elm$core$Result$Ok(
+					$author$project$Internal$Language$StringVal(string));
+			case 'BoolExp':
+				var bool = e.a;
+				return $elm$core$Result$Ok(
+					$author$project$Internal$Language$BoolVal(bool));
+			case 'IntExp':
+				var n = e.a;
+				return $elm$core$Result$Ok(
+					$author$project$Internal$Language$IntVal(n));
+			case 'FloatExp':
+				var n = e.a;
+				return $elm$core$Result$Ok(
+					$author$project$Internal$Language$FloatVal(n));
+			case 'ListExp':
+				var list = e.a;
+				return A2(
+					$elm$core$Result$map,
+					A2($elm$core$Basics$composeR, $elm$core$List$reverse, $author$project$Internal$Language$ListVal),
+					A3(
+						$elm$core$List$foldl,
+						function (a) {
+							return $elm$core$Result$andThen(
+								function (l) {
+									return A2(
+										$elm$core$Result$map,
+										function (b) {
+											return A2($elm$core$List$cons, b, l);
+										},
+										A2($author$project$Internal$Semantics$evalExp, a, context));
+								});
+						},
+						$elm$core$Result$Ok(_List_Nil),
+						list));
+			case 'ObjectExp':
+				var dict = e.a;
+				return A2(
+					$elm$core$Result$map,
+					$author$project$Internal$Language$ObjectVal,
+					A3(
+						$elm$core$Dict$foldl,
+						F2(
+							function (k, a) {
+								return $elm$core$Result$andThen(
+									function (l) {
+										return A2(
+											$elm$core$Result$map,
+											function (b) {
+												return A3($elm$core$Dict$insert, k, b, l);
+											},
+											A2($author$project$Internal$Semantics$evalExp, a, context));
+									});
+							}),
+						$elm$core$Result$Ok($elm$core$Dict$empty),
+						dict));
+			case 'FunctionExp':
+				var maybeString = e.a;
+				var exp = e.b;
+				return $elm$core$Result$Ok(
+					A2($author$project$Internal$Language$FunctionVal, maybeString, exp));
+			case 'BlockExp':
+				var block = e.a;
+				return A2(
+					$elm$core$Result$map,
+					$elm$core$Tuple$first,
+					A2(
+						$author$project$Internal$Semantics$evalBlock,
+						block,
+						A2(
+							$elm$core$Dict$map,
+							F2(
+								function (_v5, v) {
+									return _Utils_update(
+										v,
+										{access: $author$project$Internal$Semantics$Read});
+								}),
+							context)));
+			default:
+				var exp1 = e.a;
+				var exp2 = e.b;
+				return A2(
+					$elm$core$Result$andThen,
+					function (v2) {
+						switch (v2.$) {
+							case 'FunctionVal':
+								var string = v2.a;
+								var exp3 = v2.b;
+								return A2(
+									$author$project$Internal$Semantics$evalExp,
+									A2(
+										$elm$core$Maybe$withDefault,
+										exp3,
+										A2(
+											$elm$core$Maybe$map,
+											function (s) {
+												return A3($author$project$Internal$Semantics$substitute, s, exp1, exp3);
+											},
+											string)),
+									context);
+							case 'ExtensionVal':
+								var fun = v2.a;
+								return A2(
+									$elm$core$Result$andThen,
+									function (v1) {
+										return fun(v1);
+									},
+									A2($author$project$Internal$Semantics$evalExp, exp1, context));
+							default:
+								return $elm$core$Result$Err(
+									'Can\'t apply a value to ' + $author$project$Internal$Util$valueToString(v2));
+						}
+					},
+					A2($author$project$Internal$Semantics$evalExp, exp2, context));
+		}
 	});
 var $author$project$Internal$Semantics$evalStatement = F2(
 	function (statement, context) {
