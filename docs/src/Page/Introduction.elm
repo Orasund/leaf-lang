@@ -11,6 +11,7 @@ chapter : ( String, List (Chapter Model) )
 chapter =
     ( "Basics"
     , [ Chapter.view "Introduction" introduction
+    , Chapter.view "When to use this package" whenToUse
         , Chapter.view "Hello World" helloWorld
         , Chapter.view "Extension Functions" extensionFunctions
       ]
@@ -38,6 +39,34 @@ A Leaf block is composed out of a list of statements, followed by an expression 
 
 ![Syntax for Spaces](https://orasund.github.io/leaf-lang/syntax/spaces.svg)
 """
+
+whenToUse : String
+whenToUse =
+    """
+
+Scripting languages are used to let users customize the behaviour of your site in runtime.
+
+### Markup vs Template vs Script
+
+Let's say you have a blog written in Elm and would like to dynamically load the individual posts out of a database.
+
+If your blog posts only contain static text, then a markup language (for example markdown) would do the job.
+
+If you additionally have some pre-defined custom components, like an interactive plot or special layouts for each post, then a template language is what you need.
+
+But what do you do if you'd like individual components, that are unique to a single post? This could be a unique looking plot, some executable code snippet or a mini-game. For this, you'd use a scripting language.
+
+### Why Leaf
+
+There are a lot of scripting languages out there (JavaScript, Phython, Elm, Lisp). So why is it a good idea to invent something new? My focus was in having a small language that is easy to grasp and that can be  further extended.
+
+The only scripting language i found that fits both criteria is Lua. Leaf is an implementation of Lua, but with a modern syntax and a more functional mindset.
+
+### When NOT to use this package
+
+I intentionally did not include standard libraries in this package. So if you use it, you might need to write a lot of very basic function before you can actually start. The good thing is, though, that new Leaf packages can be published as regular Elm packages on packages.elm-lang.org and with every additional leaf package the language gets more useful.
+
+If you need a scripting language for a professional use case, you should not use Leaf (at least not yet)."""
 
 helloWorld : String
 helloWorld =
