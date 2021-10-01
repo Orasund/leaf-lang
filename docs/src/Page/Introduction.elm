@@ -58,7 +58,7 @@ But what do you do if you'd like individual components, that are unique to a sin
 
 ### Why Leaf
 
-There are a lot of scripting languages out there (JavaScript, Phython, Elm, Lisp). So why is it a good idea to invent something new? My focus was in having a small language that is easy to grasp and that can be  further extended.
+There are a lot of scripting languages out there (JavaScript, Phython, Lua, Lisp). So why is it a good idea to invent something new? My focus was in having a small language that is easy to grasp and that can be  further extended.
 
 The only scripting language i found that fits both criteria is Lua. Leaf is an implementation of Lua, but with a modern syntax and a more functional mindset.
 
